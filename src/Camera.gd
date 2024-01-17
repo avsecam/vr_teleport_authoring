@@ -6,6 +6,9 @@ extends Camera2D
 
 
 func _process(delta):
+	if %TeleportNodes.in_edit_node_mode:
+		return
+	
 	if Input.is_action_pressed("ui_left"):
 		self.position.x -= move_speed
 	if Input.is_action_pressed("ui_right"):

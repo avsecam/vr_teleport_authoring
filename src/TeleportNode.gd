@@ -15,7 +15,7 @@ var selected: bool = false
 var can_drag: bool = false
 
 
-func _ready():	
+func _ready():
 	sprite.texture = sprite_texture
 	line_edit.text = area_name
 

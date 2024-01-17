@@ -22,17 +22,19 @@ func _process(delta):
 	var teleport_node_handler: TeleportNodeHandler = get_node("%TeleportNodes")
 	
 	# Delete button rendering
-	if teleport_node_handler.child_selected() == null or teleport_node_handler.in_edit_connections_mode:
+	if teleport_node_handler.child_selected() == null \
+		or teleport_node_handler.in_edit_connections_mode \
+		or teleport_node_handler.in_edit_node_mode:
 		delete_button.disabled = true
 	else:
 		delete_button.disabled = false
 	
 	# Edit button rendering
-	edit_button.disabled = teleport_node_handler.child_selected() == null
+	edit_button.disabled = teleport_node_handler.child_selected() == null or teleport_node_handler.in_edit_node_mode
 	edit_button.text = "CONFIRM" if teleport_node_handler.in_edit_connections_mode else "EDIT CONNECTIONS"
 	
 	# Enter button rendering
-	enter_button.disabled = teleport_node_handler.child_selected() == null
+	enter_button.disabled = teleport_node_handler.child_selected() == null or teleport_node_handler.in_edit_connections_mode
 	enter_button.text = "CONFIRM" if teleport_node_handler.in_edit_node_mode else "ENTER NODE"
 
 
