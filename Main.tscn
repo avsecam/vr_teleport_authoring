@@ -1,10 +1,11 @@
-[gd_scene load_steps=8 format=3 uid="uid://bhvtms0c52igc"]
+[gd_scene load_steps=11 format=3 uid="uid://bhvtms0c52igc"]
 
 [ext_resource type="Script" path="res://src/NodeViewer.gd" id="1_g7wbb"]
 [ext_resource type="Texture2D" uid="uid://dq7u67nfmm3a7" path="res://assets/outside_0.jpg" id="1_uli44"]
 [ext_resource type="Script" path="res://src/UI.gd" id="2_edhfa"]
 [ext_resource type="Script" path="res://TeleportNodeHandler.gd" id="2_gref0"]
 [ext_resource type="Script" path="res://src/Camera.gd" id="2_kdwmv"]
+[ext_resource type="PackedScene" uid="uid://c6217bo4dts2i" path="res://src/Teleporter.tscn" id="3_ajf81"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_82jvv"]
 albedo_texture = ExtResource("1_uli44")
@@ -12,12 +13,20 @@ albedo_texture = ExtResource("1_uli44")
 [sub_resource type="SphereMesh" id="SphereMesh_7kg3k"]
 material = SubResource("StandardMaterial3D_82jvv")
 flip_faces = true
+radius = 5.0
+height = 10.0
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_gfaeb"]
+albedo_color = Color(1, 0.341176, 0.290196, 1)
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_4apla"]
+material = SubResource("StandardMaterial3D_gfaeb")
+height = 0.01
 
 [node name="TeleportAuthor" type="Node"]
 
 [node name="NodeViewer" type="Node3D" parent="."]
 unique_name_in_owner = true
-visible = false
 script = ExtResource("1_g7wbb")
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="NodeViewer"]
@@ -26,8 +35,19 @@ mesh = SubResource("SphereMesh_7kg3k")
 [node name="Camera3D" type="Camera3D" parent="NodeViewer/MeshInstance3D"]
 current = true
 
+[node name="TeleporterIndicatorAnchor" type="Node3D" parent="NodeViewer/MeshInstance3D/Camera3D"]
+transform = Transform3D(1, 0, 0, 0, 0.986286, 0.165048, 0, -0.165048, 0.986286, 0, 0, 0)
+
+[node name="TeleporterIndicator" parent="NodeViewer/MeshInstance3D/Camera3D/TeleporterIndicatorAnchor" instance=ExtResource("3_ajf81")]
+
+[node name="MeshInstance3D" parent="NodeViewer/MeshInstance3D/Camera3D/TeleporterIndicatorAnchor/TeleporterIndicator/CollisionShape3D" index="0"]
+mesh = SubResource("CylinderMesh_4apla")
+
 [node name="OmniLight3D" type="OmniLight3D" parent="NodeViewer/MeshInstance3D"]
-omni_range = 0.595
+omni_range = 7.0
+omni_attenuation = 1e-05
+
+[node name="Teleporters" type="Node3D" parent="NodeViewer/MeshInstance3D"]
 
 [node name="TeleportNodes" type="Node2D" parent="."]
 unique_name_in_owner = true
@@ -168,3 +188,5 @@ color = Color(0, 0, 1, 1)
 layout_mode = 2
 theme_override_font_sizes/font_size = 0
 text = "TELEPORTER SET"
+
+[editable path="NodeViewer/MeshInstance3D/Camera3D/TeleporterIndicatorAnchor/TeleporterIndicator"]
