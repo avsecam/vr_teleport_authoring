@@ -1,0 +1,81 @@
+class_name TeleportNodeHandler
+extends Node2D
+
+
+var in_edit_mode := false
+
+
+func _ready():
+	Events.teleport_node_selected.connect(_on_teleport_node_selected)
+	Events.teleport_node_drag_started.connect(_on_teleport_node_drag_started)
+	Events.teleport_node_add_requested.connect(_on_teleport_node_add_requested)
+	Events.teleport_node_delete_requested.connect(_on_teleport_node_delete_requested)
+	Events.teleport_node_edit_requested.connect(_on_teleport_node_edit_requested)
+	Events.teleport_node_edit_confirm_requested.connect(_on_teleport_node_edit_confirm_requested)
+	Events.teleport_node_connection_add_requested.connect(_on_teleport_node_connection_add_requested)
+
+
+func child_selected():
+	for child in get_children():
+		if (child as TeleportNode).selected:
+			return child
+	return null
+
+
+func _on_teleport_node_selected(node: TeleportNode):
+	if in_edit_mode:
+		pass
+	else:
+		for child in self.get_children():
+			(child as TeleportNode).selected = false
+		
+		node.selected = true
+
+
+func _on_teleport_node_drag_started(node: TeleportNode):
+	# Only allow one node to be dragged at any time
+	for child in self.get_children():
+		(child as TeleportNode).can_drag = false
+	
+	node.can_drag = true
+
+
+func _on_teleport_node_add_requested(node: TeleportNode):
+	# Add node at center of screen
+	var node_position: Vector2 = %"Camera2D".position
+	node.position = node_position
+	
+	self.add_child(node)
+
+
+func _on_teleport_node_delete_requested(node: TeleportNode):
+	# Delete connections from other nodes
+	for child in get_children():
+		# Find node that is being deleted
+		for i in (child as TeleportNode).can_teleport_to.size():
+			var area: NodePath = (child as TeleportNode).can_teleport_to[i]
+			if area.get_name(area.get_name_count() - 1) == node.name:
+				(child as TeleportNode).can_teleport_to.remove_at(i)
+				break
+	
+	node.queue_free()
+
+
+func _on_teleport_node_edit_requested(node: TeleportNode):
+	in_edit_mode = true
+
+
+func _on_teleport_node_edit_confirm_requested(node: TeleportNode):
+	in_edit_mode = false
+
+
+func _on_teleport_node_connection_add_requested(from: TeleportNode, to: TeleportNode):
+	var node_list = from.can_teleport_to
+	
+	for i in range(node_list.size()):
+		var node: NodePath = node_list[i]
+		if node.get_name(node.get_name_count() - 1) == to.name:
+			node_list.remove_at(i)
+			return
+	
+	node_list.append(to.get_path())

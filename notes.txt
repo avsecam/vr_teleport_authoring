@@ -1,0 +1,4 @@
+deselect when clicking outside any area
+
+allow editing the 3D view
+	for placing teleporters
