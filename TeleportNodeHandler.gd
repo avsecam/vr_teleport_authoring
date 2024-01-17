@@ -2,7 +2,8 @@ class_name TeleportNodeHandler
 extends Node2D
 
 
-var in_edit_mode := false
+var in_edit_connections_mode := false
+var in_edit_node_mode := false
 
 
 func _ready():
@@ -23,7 +24,7 @@ func child_selected():
 
 
 func _on_teleport_node_selected(node: TeleportNode):
-	if in_edit_mode:
+	if in_edit_connections_mode:
 		pass
 	else:
 		for child in self.get_children():
@@ -62,11 +63,11 @@ func _on_teleport_node_delete_requested(node: TeleportNode):
 
 
 func _on_teleport_node_edit_requested(node: TeleportNode):
-	in_edit_mode = true
+	in_edit_connections_mode = true
 
 
 func _on_teleport_node_edit_confirm_requested(node: TeleportNode):
-	in_edit_mode = false
+	in_edit_connections_mode = false
 
 
 func _on_teleport_node_connection_add_requested(from: TeleportNode, to: TeleportNode):

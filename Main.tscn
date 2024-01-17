@@ -1,12 +1,33 @@
-[gd_scene load_steps=4 format=3 uid="uid://babrupc5034ci"]
+[gd_scene load_steps=8 format=3 uid="uid://bhvtms0c52igc"]
 
+[ext_resource type="Script" path="res://src/NodeViewer.gd" id="1_g7wbb"]
+[ext_resource type="Texture2D" uid="uid://dq7u67nfmm3a7" path="res://assets/outside_0.jpg" id="1_uli44"]
 [ext_resource type="Script" path="res://src/UI.gd" id="2_edhfa"]
 [ext_resource type="Script" path="res://TeleportNodeHandler.gd" id="2_gref0"]
-[ext_resource type="Script" path="res://Camera2D.gd" id="2_ttjdn"]
+[ext_resource type="Script" path="res://src/Camera.gd" id="2_kdwmv"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_82jvv"]
+albedo_texture = ExtResource("1_uli44")
+
+[sub_resource type="SphereMesh" id="SphereMesh_7kg3k"]
+material = SubResource("StandardMaterial3D_82jvv")
+flip_faces = true
 
 [node name="TeleportAuthor" type="Node"]
 
-[node name="Node3D" type="Node3D" parent="."]
+[node name="NodeViewer" type="Node3D" parent="."]
+unique_name_in_owner = true
+visible = false
+script = ExtResource("1_g7wbb")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="NodeViewer"]
+mesh = SubResource("SphereMesh_7kg3k")
+
+[node name="Camera3D" type="Camera3D" parent="NodeViewer/MeshInstance3D"]
+current = true
+
+[node name="OmniLight3D" type="OmniLight3D" parent="NodeViewer/MeshInstance3D"]
+omni_range = 0.595
 
 [node name="TeleportNodes" type="Node2D" parent="."]
 unique_name_in_owner = true
@@ -14,13 +35,14 @@ script = ExtResource("2_gref0")
 
 [node name="Camera2D" type="Camera2D" parent="."]
 unique_name_in_owner = true
-script = ExtResource("2_ttjdn")
+script = ExtResource("2_kdwmv")
 
 [node name="CanvasLayer" type="CanvasLayer" parent="Camera2D"]
 
 [node name="UI" type="Control" parent="Camera2D/CanvasLayer"]
 custom_minimum_size = Vector2(1280, 720)
 layout_mode = 3
+anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
@@ -29,7 +51,7 @@ mouse_filter = 2
 script = ExtResource("2_edhfa")
 metadata/_edit_use_anchors_ = true
 
-[node name="MarginContainer" type="MarginContainer" parent="Camera2D/CanvasLayer/UI"]
+[node name="Controls" type="MarginContainer" parent="Camera2D/CanvasLayer/UI"]
 layout_mode = 0
 offset_right = 40.0
 offset_bottom = 40.0
@@ -38,7 +60,7 @@ theme_override_constants/margin_top = 20
 theme_override_constants/margin_right = 20
 theme_override_constants/margin_bottom = 20
 
-[node name="Label" type="Label" parent="Camera2D/CanvasLayer/UI/MarginContainer"]
+[node name="Label" type="Label" parent="Camera2D/CanvasLayer/UI/Controls"]
 layout_mode = 2
 text = "WASD - move around
 Scroll - zoom

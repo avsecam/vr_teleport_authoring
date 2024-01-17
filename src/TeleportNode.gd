@@ -21,12 +21,11 @@ func _ready():
 
 
 func _input_event(viewport, event, shape_idx):
-	print(shape_idx)
 	if event.is_action_pressed("mouse_left"):
 		Events.teleport_node_drag_started.emit(self)
 	elif event.is_action_pressed("mouse_right"):
 		var handler: TeleportNodeHandler = get_parent()
-		if handler.in_edit_mode:
+		if handler.in_edit_connections_mode:
 			if not handler.child_selected().get_path() == self.get_path():
 				Events.teleport_node_connection_add_requested.emit(handler.child_selected(), self)
 		else:

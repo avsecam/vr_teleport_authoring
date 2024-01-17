@@ -15,24 +15,25 @@ func _ready():
 	
 	delete_button.pressed.connect(_on_delete_button_pressed)
 	edit_button.pressed.connect(_on_edit_button_pressed)
+	enter_button.pressed.connect(_on_enter_button_pressed)
 
 
 func _process(delta):
 	var teleport_node_handler: TeleportNodeHandler = get_node("%TeleportNodes")
 	
 	# Delete button rendering
-	if teleport_node_handler.child_selected() == null or teleport_node_handler.in_edit_mode:
+	if teleport_node_handler.child_selected() == null or teleport_node_handler.in_edit_connections_mode:
 		delete_button.disabled = true
 	else:
 		delete_button.disabled = false
 	
 	# Edit button rendering
 	edit_button.disabled = teleport_node_handler.child_selected() == null
-	edit_button.text = "CONFIRM" if teleport_node_handler.in_edit_mode else "EDIT CONNECTIONS"
+	edit_button.text = "CONFIRM" if teleport_node_handler.in_edit_connections_mode else "EDIT CONNECTIONS"
 	
 	# Enter button rendering
 	enter_button.disabled = teleport_node_handler.child_selected() == null
-	enter_button.text = "CONFIRM" if teleport_node_handler.in_edit_mode else "ENTER NODE"
+	enter_button.text = "CONFIRM" if teleport_node_handler.in_edit_node_mode else "ENTER NODE"
 
 
 func _on_file_dialog_button_pressed():
@@ -56,8 +57,17 @@ func _on_edit_button_pressed():
 	var teleport_node_handler: TeleportNodeHandler = get_node("%TeleportNodes")
 	var selected_child: TeleportNode = teleport_node_handler.child_selected()
 	
-	if teleport_node_handler.in_edit_mode:
+	if teleport_node_handler.in_edit_connections_mode:
 		Events.teleport_node_edit_confirm_requested.emit(selected_child)
 	else:
 		Events.teleport_node_edit_requested.emit(selected_child)
 
+
+func _on_enter_button_pressed():
+	var teleport_node_handler: TeleportNodeHandler = get_node("%TeleportNodes")
+	var selected_child: TeleportNode = teleport_node_handler.child_selected()
+	
+	if teleport_node_handler.in_edit_node_mode:
+		Events.teleport_node_exit_requested.emit(selected_child)
+	else:
+		Events.teleport_node_enter_requested.emit(selected_child)
