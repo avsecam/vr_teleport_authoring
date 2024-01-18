@@ -1,0 +1,2 @@
+class_name Teleporter
+extends StaticBody3D

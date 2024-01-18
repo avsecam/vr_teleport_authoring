@@ -9,7 +9,9 @@ extends StaticBody2D
 @export var sprite_texture: Texture2D
 @export var area_name: String
 
-@export var can_teleport_to: Array # of TeleportNodes
+@export var teleport_connections: Array # of TeleportNode NodePaths
+
+var teleporters: Array # of Teleporters
 
 var selected: bool = false
 var can_drag: bool = false
@@ -24,7 +26,7 @@ func _input_event(viewport, event, shape_idx):
 	if event.is_action_pressed("mouse_left"):
 		Events.teleport_node_drag_started.emit(self)
 	elif event.is_action_pressed("mouse_right"):
-		var handler: TeleportNodeHandler = get_parent()
+		var handler: Node = self.get_parent().owner
 		if handler.in_edit_connections_mode:
 			if not handler.child_selected().get_path() == self.get_path():
 				Events.teleport_node_connection_add_requested.emit(handler.child_selected(), self)
@@ -37,7 +39,7 @@ func _input_event(viewport, event, shape_idx):
 
 func _process(delta):
 	# Make number of lines equal the number of connections
-	var difference = connections.get_children().size() - self.can_teleport_to.size()
+	var difference = connections.get_children().size() - self.teleport_connections.size()
 	if difference < 0:
 		connections.add_child(Line2D.new())
 	elif difference > 0:
@@ -52,8 +54,8 @@ func _process(delta):
 		self.position = get_global_mouse_position()
 	
 	# Draw path lines
-	for i in range(can_teleport_to.size()):
-		var node = can_teleport_to[i]
+	for i in range(teleport_connections.size()):
+		var node = teleport_connections[i]
 		var line: Line2D = connections.get_child(i)
 		if (get_node(node) == null):
 			continue
@@ -71,3 +73,7 @@ func _process(delta):
 			line.default_color = Color(1, 1, 1, 0.5)
 		
 		line.width = 4 if self.selected else 2
+
+
+func add_teleport_connection(node: TeleportNode):
+	teleport_connections.append(node.get_path())

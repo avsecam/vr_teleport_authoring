@@ -16,7 +16,7 @@ script = ExtResource("2_gref0")
 
 [node name="TeleportNode" parent="TeleportNodes" instance=ExtResource("1_lwm24")]
 position = Vector2(601, 312)
-can_teleport_to = [NodePath("../TeleportNode2")]
+teleport_connections = [NodePath("../TeleportNode2")]
 
 [node name="TeleportNode2" parent="TeleportNodes" instance=ExtResource("1_lwm24")]
 position = Vector2(934, 365)

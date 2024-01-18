@@ -2,8 +2,8 @@
 
 [ext_resource type="Script" path="res://src/NodeViewer.gd" id="1_g7wbb"]
 [ext_resource type="Texture2D" uid="uid://dq7u67nfmm3a7" path="res://assets/outside_0.jpg" id="1_uli44"]
+[ext_resource type="Script" path="res://src/TeleportAuthor.gd" id="1_vmn6e"]
 [ext_resource type="Script" path="res://src/UI.gd" id="2_edhfa"]
-[ext_resource type="Script" path="res://TeleportNodeHandler.gd" id="2_gref0"]
 [ext_resource type="Script" path="res://src/Camera.gd" id="2_kdwmv"]
 [ext_resource type="PackedScene" uid="uid://c6217bo4dts2i" path="res://src/Teleporter.tscn" id="3_ajf81"]
 
@@ -24,34 +24,34 @@ material = SubResource("StandardMaterial3D_gfaeb")
 height = 0.01
 
 [node name="TeleportAuthor" type="Node"]
+script = ExtResource("1_vmn6e")
 
 [node name="NodeViewer" type="Node3D" parent="."]
 unique_name_in_owner = true
 script = ExtResource("1_g7wbb")
 
-[node name="MeshInstance3D" type="MeshInstance3D" parent="NodeViewer"]
+[node name="Bubble" type="MeshInstance3D" parent="NodeViewer"]
 mesh = SubResource("SphereMesh_7kg3k")
 
-[node name="Camera3D" type="Camera3D" parent="NodeViewer/MeshInstance3D"]
+[node name="Camera3D" type="Camera3D" parent="NodeViewer/Bubble"]
 current = true
 
-[node name="TeleporterIndicatorAnchor" type="Node3D" parent="NodeViewer/MeshInstance3D/Camera3D"]
+[node name="TeleporterIndicatorAnchor" type="Node3D" parent="NodeViewer/Bubble/Camera3D"]
 transform = Transform3D(1, 0, 0, 0, 0.986286, 0.165048, 0, -0.165048, 0.986286, 0, 0, 0)
 
-[node name="TeleporterIndicator" parent="NodeViewer/MeshInstance3D/Camera3D/TeleporterIndicatorAnchor" instance=ExtResource("3_ajf81")]
+[node name="TeleporterIndicator" parent="NodeViewer/Bubble/Camera3D/TeleporterIndicatorAnchor" instance=ExtResource("3_ajf81")]
 
-[node name="MeshInstance3D" parent="NodeViewer/MeshInstance3D/Camera3D/TeleporterIndicatorAnchor/TeleporterIndicator/CollisionShape3D" index="0"]
+[node name="MeshInstance3D" parent="NodeViewer/Bubble/Camera3D/TeleporterIndicatorAnchor/TeleporterIndicator/CollisionShape3D" index="0"]
 mesh = SubResource("CylinderMesh_4apla")
 
-[node name="OmniLight3D" type="OmniLight3D" parent="NodeViewer/MeshInstance3D"]
+[node name="OmniLight3D" type="OmniLight3D" parent="NodeViewer/Bubble"]
 omni_range = 7.0
 omni_attenuation = 1e-05
 
-[node name="Teleporters" type="Node3D" parent="NodeViewer/MeshInstance3D"]
+[node name="Teleporters" type="Node3D" parent="NodeViewer/Bubble"]
 
 [node name="TeleportNodes" type="Node2D" parent="."]
 unique_name_in_owner = true
-script = ExtResource("2_gref0")
 
 [node name="Camera2D" type="Camera2D" parent="."]
 unique_name_in_owner = true
@@ -60,6 +60,7 @@ script = ExtResource("2_kdwmv")
 [node name="CanvasLayer" type="CanvasLayer" parent="Camera2D"]
 
 [node name="UI" type="Control" parent="Camera2D/CanvasLayer"]
+unique_name_in_owner = true
 custom_minimum_size = Vector2(1280, 720)
 layout_mode = 3
 anchors_preset = 15
@@ -71,21 +72,30 @@ mouse_filter = 2
 script = ExtResource("2_edhfa")
 metadata/_edit_use_anchors_ = true
 
-[node name="Controls" type="MarginContainer" parent="Camera2D/CanvasLayer/UI"]
-layout_mode = 0
-offset_right = 40.0
-offset_bottom = 40.0
+[node name="LeftUI" type="MarginContainer" parent="Camera2D/CanvasLayer/UI"]
+layout_mode = 1
+anchors_preset = 9
+anchor_bottom = 1.0
+offset_right = 277.0
+offset_bottom = -120.0
+grow_vertical = 2
 theme_override_constants/margin_left = 20
 theme_override_constants/margin_top = 20
 theme_override_constants/margin_right = 20
 theme_override_constants/margin_bottom = 20
 
-[node name="Label" type="Label" parent="Camera2D/CanvasLayer/UI/Controls"]
+[node name="VBoxContainer" type="VBoxContainer" parent="Camera2D/CanvasLayer/UI/LeftUI"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="Camera2D/CanvasLayer/UI/LeftUI/VBoxContainer"]
 layout_mode = 2
 text = "WASD - move around
 Scroll - zoom
 Left Click - drag node
 Right Click - action"
+
+[node name="ConnectionList" type="VBoxContainer" parent="Camera2D/CanvasLayer/UI/LeftUI/VBoxContainer"]
+layout_mode = 2
 
 [node name="FileDialog" type="FileDialog" parent="Camera2D/CanvasLayer/UI"]
 title = "Open a File"
@@ -189,4 +199,4 @@ layout_mode = 2
 theme_override_font_sizes/font_size = 0
 text = "TELEPORTER SET"
 
-[editable path="NodeViewer/MeshInstance3D/Camera3D/TeleporterIndicatorAnchor/TeleporterIndicator"]
+[editable path="NodeViewer/Bubble/Camera3D/TeleporterIndicatorAnchor/TeleporterIndicator"]

@@ -1,4 +1,6 @@
-[gd_scene load_steps=3 format=3 uid="uid://c6217bo4dts2i"]
+[gd_scene load_steps=4 format=3 uid="uid://c6217bo4dts2i"]
+
+[ext_resource type="Script" path="res://src/Teleporter.gd" id="1_mn2lr"]
 
 [sub_resource type="CylinderShape3D" id="CylinderShape3D_hkbpe"]
 height = 0.01
@@ -7,6 +9,7 @@ height = 0.01
 height = 0.01
 
 [node name="TeleporterIndicator" type="StaticBody3D"]
+script = ExtResource("1_mn2lr")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
 shape = SubResource("CylinderShape3D_hkbpe")
