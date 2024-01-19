@@ -25,6 +25,9 @@ func _ready():
 	Events.teleport_node_enter_requested.connect(_on_teleport_node_enter_requested)
 	Events.teleport_node_exit_requested.connect(_on_teleport_node_exit_requested)
 	Events.teleporter_add_requested.connect(_on_teleporter_add_requested)
+	
+	Events.connection_entry_select_requested.connect(_on_connection_entry_select_requested)
+	Events.connection_entry_delete_requested.connect(_on_connection_entry_delete_requested)
 
 
 func _process(delta):
@@ -125,3 +128,15 @@ func _on_teleport_node_exit_requested():
 
 func _on_teleporter_add_requested(node: TeleportNode, teleporter: Teleporter):
 	update_connection_list(node)
+
+
+func _on_connection_entry_select_requested(entry: ConnectionEntry):
+	for connection in connection_list.get_children():
+		connection.focused = false
+	
+	var entry_to_focus: ConnectionEntry = connection_list.get_child(connection_list.get_children().find(entry))
+	entry_to_focus.focused = true
+
+
+func _on_connection_entry_delete_requested(entry: ConnectionEntry):
+	pass
