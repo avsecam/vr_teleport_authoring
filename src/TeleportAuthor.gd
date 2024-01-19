@@ -18,6 +18,10 @@ func _ready():
 	Events.teleport_node_connection_add_requested.connect(_on_teleport_node_connection_add_requested)
 
 
+func _process(delta):
+	%TeleportNodes.visible = not in_edit_node_mode
+
+
 func child_selected():
 	for child in nodes.get_children():
 		if (child as TeleportNode).selected:
