@@ -1,4 +1,3 @@
 deselect when clicking outside any area
 
-allow editing the 3D view
-	for placing teleporters
+point camera to newly selected teleporter
