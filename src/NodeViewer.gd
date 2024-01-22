@@ -5,17 +5,23 @@ extends Node3D
 @onready var camera: Camera3D = $Bubble/Camera3D
 
 @onready var indicator_anchor: Node3D = $Bubble/Camera3D/TeleporterIndicatorAnchor
-@onready var indicator: StaticBody3D = $Bubble/Camera3D/TeleporterIndicatorAnchor/TeleporterIndicator
+@onready var indicator: Teleporter = $Bubble/Camera3D/TeleporterIndicatorAnchor/TeleporterIndicator
 
 @onready var teleporters: Node3D = $Bubble/Teleporters
 
+@onready var min_indicator_distance: float = 1 + (self.indicator.collision_shape.shape as CylinderShape3D).radius
+@onready var max_indicator_distance: float = (mesh.mesh as SphereMesh).radius - (self.indicator.collision_shape.shape as CylinderShape3D).radius
+
 @export var rotation_speed: float = 0.01
 @export var indicator_move_speed: float = 0.25
+
 
 var node: TeleportNode # Get/save all data from/to here
 
 
 func _ready():
+	indicator.position.z = indicator.position.z - min_indicator_distance
+	
 	Events.teleport_node_enter_requested.connect(_on_teleport_node_enter_requested)
 	Events.teleport_node_exit_requested.connect(_on_teleport_node_exit_requested)
 
@@ -40,9 +46,11 @@ func _process(delta):
 	else:
 		indicator.visible = true
 		if Input.is_action_just_pressed("mouse_scroll_down"):
-			indicator.position.z += indicator_move_speed
+			if abs(indicator.position.distance_to(camera.position)) > min_indicator_distance:
+				indicator.position.z += indicator_move_speed
 		if Input.is_action_just_pressed("mouse_scroll_up"):
-			indicator.position.z -= indicator_move_speed
+			if abs(indicator.position.distance_to(camera.position)) < max_indicator_distance:
+				indicator.position.z -= indicator_move_speed
 		
 		if Input.is_action_just_pressed("place_teleporter"):
 			add_teleporter()
