@@ -70,10 +70,11 @@ func update_connection_list(node: TeleportNode):
 	
 	# By now, the number of connection entries and teleport connections are equal
 	# Connect the entries to each teleport connection
-	for i in range(connection_list.get_child_count()):
-		var entry: ConnectionEntry = connection_list.get_child(i)
-		var connection: String = node.teleport_connections[i]
-		entry.connected_to = get_node(connection)
+	if connection_list.get_child_count() > 0:
+		for i in range(connection_list.get_child_count()):
+			var entry: ConnectionEntry = connection_list.get_child(i)
+			var connection: String = node.teleport_connections[i]
+			entry.connected_to = get_node(connection)
 
 
 func focus_connection_entry(entry: ConnectionEntry):
