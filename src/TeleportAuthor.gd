@@ -77,12 +77,12 @@ func _on_teleport_node_edit_confirm_requested(node: TeleportNode):
 
 
 func _on_teleport_node_connection_add_requested(from: TeleportNode, to: TeleportNode):
-	var node_list = from.teleport_connections
+	var teleport_connections = from.teleport_connections
 	
-	for i in range(node_list.size()):
-		var node: NodePath = node_list[i]
+	for i in range(teleport_connections.size()):
+		var node: NodePath = teleport_connections[i]
 		if node.get_name(node.get_name_count() - 1) == to.name:
-			node_list.remove_at(i)
+			teleport_connections.remove_at(i)
 			return
 	
 	from.add_teleport_connection(to)
