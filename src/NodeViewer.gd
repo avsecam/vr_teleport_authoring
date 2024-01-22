@@ -48,6 +48,10 @@ func _process(delta):
 			add_teleporter()
 
 	indicator.global_rotation.x = 0
+	
+	# Keep camera rotation level
+	camera.rotation.x = 0
+	camera.rotation.z = 0
 
 
 func can_add_teleporter():
