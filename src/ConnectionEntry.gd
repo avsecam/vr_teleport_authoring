@@ -11,6 +11,7 @@ const unfocused_color := Color(1, 1, 1)
 @export var connected_to: TeleportNode:
 	set(value):
 		area_name_button.text = value.area_name
+		connected_to = value
 
 @onready var area_name_button: Button = $AreaName
 @onready var delete_button: Button = $Delete
