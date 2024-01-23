@@ -49,7 +49,9 @@ func _process(delta):
 			connections.add_child(Line2D.new())
 	elif difference > 0:
 		for i in range(abs(difference)):
-			connections.get_children()[0].queue_free()
+			var node_to_remove = connections.get_child(0)
+			connections.remove_child(node_to_remove)
+			node_to_remove.queue_free()
 	
 	# Show indicator if selected
 	$ColorRect.visible = selected
@@ -64,8 +66,6 @@ func _process(delta):
 		var line: Line2D = connections.get_child(i)
 		if get_node_or_null(node) == null:
 			continue
-		if get_node(node).is_queued_for_deletion():
-			continue
 		
 		line.clear_points()
 		line.add_point(self.global_position)
@@ -74,6 +74,12 @@ func _process(delta):
 		
 		if self.selected:
 			line.default_color = Color(1, 0, 0)
+			
+			# Check teleporters if there is a corresponding teleporter with
+			# a teleport_location that matches node
+			for teleporter in teleporters:
+				if (teleporter as Teleporter).teleport_location == get_node(node):
+					line.default_color = Color(0, 0, 1)
 		else:
 			line.default_color = Color(1, 1, 1, 0.5)
 		

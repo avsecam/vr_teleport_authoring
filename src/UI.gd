@@ -28,6 +28,8 @@ func _ready():
 	
 	Events.connection_entry_select_requested.connect(_on_connection_entry_select_requested)
 	Events.connection_entry_delete_requested.connect(_on_connection_entry_delete_requested)
+	
+	Events.teleporter_add_requested.connect(_on_teleporter_add_requested)
 
 
 func _process(delta):
@@ -66,7 +68,9 @@ func update_connection_list(node: TeleportNode):
 	elif difference > 0:
 		# Decrease amount of connection entries
 		for i in range(abs(difference)):
-			connection_list.get_child(0).queue_free()
+			var node_to_remove = connection_list.get_child(0)
+			connection_list.remove_child(node_to_remove)
+			node_to_remove.queue_free()
 	
 	# By now, the number of connection entries and teleport connections are equal
 	# Connect the entries to each teleport connection
@@ -77,12 +81,35 @@ func update_connection_list(node: TeleportNode):
 			entry.connected_to = get_node(connection)
 
 
+func focus_default_connection_entry():
+	if connection_list.get_child_count() > 0:
+		# Focus first entry that has no teleporter
+		var entry_without_teleporter: ConnectionEntry
+		for connection in connection_list.get_children():
+			if not (connection as ConnectionEntry).teleporter:
+				entry_without_teleporter = connection
+				break
+		
+		if entry_without_teleporter:
+			focus_connection_entry(entry_without_teleporter)
+		else:
+			focus_connection_entry(connection_list.get_child(0))
+
+
 func focus_connection_entry(entry: ConnectionEntry):
 	for connection in connection_list.get_children():
 		connection.focused = false
 	
 	var entry_to_focus: ConnectionEntry = connection_list.get_child(connection_list.get_children().find(entry))
 	entry_to_focus.focused = true
+
+
+func get_focused_connection_entry():
+	for connection in connection_list.get_children():
+		if connection.focused:
+			return connection
+	
+	return null
 
 
 func _on_file_dialog_button_pressed():
@@ -124,20 +151,7 @@ func _on_enter_button_pressed():
 
 func _on_teleport_node_enter_requested(node: TeleportNode):
 	update_connection_list(node)
-	
-	if connection_list.get_child_count() > 0:
-		# Focus first entry that has no teleporter
-		var entry_without_teleporter: ConnectionEntry
-		for connection in connection_list.get_children():
-			if not (connection as ConnectionEntry).teleporter:
-				entry_without_teleporter = connection
-				break
-		
-		if entry_without_teleporter:
-			focus_connection_entry(entry_without_teleporter)
-		else:
-			focus_connection_entry(connection_list.get_child(0))
-	
+	focus_default_connection_entry()
 	connection_list.visible = true
 
 
@@ -149,7 +163,13 @@ func _on_teleport_node_exit_requested():
 
 
 func _on_teleporter_add_requested(node: TeleportNode, teleporter: Teleporter):
+	var focused_entry: ConnectionEntry = get_focused_connection_entry()
+	
+	focused_entry.teleporter = teleporter
+	focused_entry.teleporter.teleport_location = focused_entry.connected_to
+	
 	update_connection_list(node)
+	focus_default_connection_entry()
 
 
 func _on_connection_entry_select_requested(entry: ConnectionEntry):
