@@ -1,6 +1,8 @@
 extends Node3D
 
 
+const teleporter_scene: PackedScene = preload("res://src/Teleporter.tscn")
+
 @onready var mesh: MeshInstance3D = $Bubble
 @onready var camera: Camera3D = $Bubble/Camera3D
 
@@ -67,11 +69,13 @@ func can_add_teleporter():
 
 
 func add_teleporter():
-	var teleporter: Teleporter = Teleporter.new()
+	var teleporter: Teleporter = teleporter_scene.instantiate()
 	
 	teleporters.add_child(teleporter)
 	teleporter.global_position = indicator.global_position
 	teleporter.global_rotation = indicator.global_rotation
+	
+	node.teleporters.append(teleporter)
 	
 	Events.teleporter_add_requested.emit(node, teleporter)
 
