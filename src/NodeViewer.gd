@@ -28,6 +28,7 @@ func _ready():
 	Events.teleport_node_exit_requested.connect(_on_teleport_node_exit_requested)
 	
 	Events.connection_entry_select_requested.connect(_on_connection_entry_select_requested)
+	Events.connection_entry_delete_requested.connect(_on_connection_entry_delete_requested)
 
 
 func _process(delta):
@@ -104,3 +105,13 @@ func _on_connection_entry_select_requested(entry: ConnectionEntry):
 	# Look at selected entry's assigned teleporter
 	if entry.teleporter:
 		camera.look_at(entry.teleporter.position)
+
+
+func _on_connection_entry_delete_requested(entry: ConnectionEntry):
+	var teleporter_idx: int = node.teleporters.find(entry.teleporter)
+	
+	teleporters.remove_child(entry.teleporter)
+	entry.teleporter.queue_free()
+	
+	entry.teleporter = null
+	node.teleporters.remove_at(teleporter_idx)
