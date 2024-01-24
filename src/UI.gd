@@ -28,8 +28,6 @@ func _ready():
 	
 	Events.connection_entry_select_requested.connect(_on_connection_entry_select_requested)
 	Events.connection_entry_delete_requested.connect(_on_connection_entry_delete_requested)
-	
-	Events.teleporter_add_requested.connect(_on_teleporter_add_requested)
 
 
 func _process(delta):
@@ -79,6 +77,10 @@ func update_connection_list(node: TeleportNode):
 			var entry: ConnectionEntry = connection_list.get_child(i)
 			var connection: String = node.teleport_connections[i]
 			entry.connected_to = get_node(connection)
+			
+			for teleporter in node.teleporters:
+				if teleporter.teleport_location == get_node(connection):
+					entry.teleporter = teleporter
 
 
 func focus_default_connection_entry():
@@ -155,7 +157,7 @@ func _on_teleport_node_enter_requested(node: TeleportNode):
 	connection_list.visible = true
 
 
-func _on_teleport_node_exit_requested():
+func _on_teleport_node_exit_requested(_node):
 	for child in connection_list.get_children():
 		child.queue_free()
 	
