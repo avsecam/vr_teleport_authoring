@@ -87,6 +87,10 @@ func _on_teleport_node_enter_requested(node: TeleportNode):
 	self.node = node
 	self.mesh.mesh.material.albedo_texture = node.sprite.texture
 	
+	# Load teleporters from TeleportNode
+	for i in node.teleporters.size():
+		teleporters.add_child(node.teleporters[i])
+	
 	%"Camera2D".visible = false
 	self.visible = true
 	
@@ -95,6 +99,11 @@ func _on_teleport_node_enter_requested(node: TeleportNode):
 
 func _on_teleport_node_exit_requested(node: TeleportNode):
 	self.node = node
+	
+	# Clear teleporters
+	for i in teleporters.get_child_count():
+		var teleporter = teleporters.get_child(0)
+		teleporters.remove_child(teleporter)
 	
 	%"Camera2D".visible = true
 	self.visible = false
