@@ -26,6 +26,8 @@ func _ready():
 	
 	Events.teleport_node_enter_requested.connect(_on_teleport_node_enter_requested)
 	Events.teleport_node_exit_requested.connect(_on_teleport_node_exit_requested)
+	
+	Events.connection_entry_select_requested.connect(_on_connection_entry_select_requested)
 
 
 func _process(delta):
@@ -96,3 +98,9 @@ func _on_teleport_node_exit_requested(node: TeleportNode):
 	%"Camera2D".visible = true
 	self.visible = false
 	self.owner.in_edit_node_mode = false
+
+
+func _on_connection_entry_select_requested(entry: ConnectionEntry):
+	# Look at selected entry's assigned teleporter
+	if entry.teleporter:
+		camera.look_at(entry.teleporter.position)
