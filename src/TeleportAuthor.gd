@@ -33,10 +33,13 @@ func _on_teleport_node_selected(node: TeleportNode):
 	if in_edit_connections_mode:
 		pass
 	else:
-		for child in nodes.get_children():
-			(child as TeleportNode).selected = false
-		
-		node.selected = true
+		if not node.selected:
+			for child in nodes.get_children():
+				(child as TeleportNode).selected = false
+			
+			node.selected = true
+		else:
+			node.selected = false
 
 
 func _on_teleport_node_drag_started(node: TeleportNode):
