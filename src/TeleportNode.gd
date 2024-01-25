@@ -18,6 +18,8 @@ var can_drag: bool = false
 
 
 func _ready():
+	line_edit.text_submitted.connect(_on_line_edit_text_submitted)
+	
 	sprite.texture = sprite_texture
 	line_edit.text = area_name
 	
@@ -88,3 +90,7 @@ func _process(delta):
 
 func add_teleport_connection(node: TeleportNode):
 	teleport_connections.append(node.get_path())
+
+
+func _on_line_edit_text_submitted(new_text: String):
+	line_edit.release_focus()
