@@ -16,6 +16,8 @@ func _ready():
 	Events.teleport_node_edit_requested.connect(_on_teleport_node_edit_requested)
 	Events.teleport_node_edit_confirm_requested.connect(_on_teleport_node_edit_confirm_requested)
 	Events.teleport_node_connection_add_requested.connect(_on_teleport_node_connection_add_requested)
+	
+	Events.save_requested.connect(_on_save_requested)
 
 
 func _process(delta):
@@ -89,3 +91,30 @@ func _on_teleport_node_connection_add_requested(from: TeleportNode, to: Teleport
 			return
 	
 	from.add_teleport_connection(to)
+
+
+# TODO: Dont allow same named nodes
+func _on_save_requested():
+	var folder_name: String = "saved_" + str(floor(Time.get_unix_time_from_system()))
+	var dir: DirAccess = DirAccess.open("user://")
+	if dir:
+		dir.make_dir(folder_name)
+	
+	var full_dir_name: String = "user://" + folder_name + "/"
+	
+	for i in nodes.get_child_count():
+		var node: TeleportNode = nodes.get_child(i)
+		var filename: String = full_dir_name + node.area_name.to_pascal_case() + ".tscn"
+		
+		var saved_tp_node: SavedTeleportNode = preload("res://src/SavedTeleportNode.tscn").instantiate()
+		saved_tp_node.panorama_texture = node.sprite_texture
+		saved_tp_node.area_name = node.area_name
+		
+		for j in node.teleporters.size():
+			var teleporter: Teleporter = node.teleporters[j]
+#			teleporter.teleport_location_resource_path = 
+		
+		var packed: PackedScene = PackedScene.new()
+	
+	# Open folder containing scenes
+	OS.shell_show_in_file_manager(ProjectSettings.globalize_path(full_dir_name))
