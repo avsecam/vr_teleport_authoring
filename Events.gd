@@ -15,3 +15,5 @@ signal teleporter_add_requested(node: TeleportNode, teleporter: Teleporter)
 
 signal connection_entry_select_requested(entry: ConnectionEntry)
 signal connection_entry_delete_requested(entry: ConnectionEntry)
+
+signal save_requested()
