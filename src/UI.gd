@@ -12,6 +12,7 @@ const connection_entry: PackedScene = preload("res://src/ConnectionEntry.tscn")
 @onready var delete_button: Button = $Container/HBoxContainer/Delete
 @onready var edit_button: Button = $Container/HBoxContainer/Edit
 @onready var enter_button: Button = $Container/HBoxContainer/Enter
+@onready var save_button: Button = $Container/HBoxContainer/Save
 
 
 func _ready():
@@ -21,6 +22,7 @@ func _ready():
 	delete_button.pressed.connect(_on_delete_button_pressed)
 	edit_button.pressed.connect(_on_edit_button_pressed)
 	enter_button.pressed.connect(_on_enter_button_pressed)
+	save_button.pressed.connect(_on_save_button_pressed)
 	
 	Events.teleport_node_enter_requested.connect(_on_teleport_node_enter_requested)
 	Events.teleport_node_exit_requested.connect(_on_teleport_node_exit_requested)
@@ -149,6 +151,10 @@ func _on_enter_button_pressed():
 		Events.teleport_node_exit_requested.emit(selected_child)
 	else:
 		Events.teleport_node_enter_requested.emit(selected_child)
+
+
+func _on_save_button_pressed():
+	Events.save_requested.emit()
 
 
 func _on_teleport_node_enter_requested(node: TeleportNode):

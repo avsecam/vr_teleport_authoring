@@ -5,3 +5,4 @@ how to save scenes
 what to save:
 	TeleportNode
 		convert into something that only contains the Teleporters, 360 image
+		Teleporter.teleport_location should be converted to resource path
