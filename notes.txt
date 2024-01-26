@@ -1,3 +1,7 @@
-deselect when clicking outside any area
+how to save images
+how to save scenes
 
-point camera to newly selected teleporter
+
+what to save:
+	TeleportNode
+		convert into something that only contains the Teleporters, 360 image
