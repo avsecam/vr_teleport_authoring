@@ -1,4 +1,4 @@
-[gd_scene load_steps=11 format=3 uid="uid://bhvtms0c52igc"]
+[gd_scene load_steps=12 format=3 uid="uid://bhvtms0c52igc"]
 
 [ext_resource type="Script" path="res://src/NodeViewer.gd" id="1_g7wbb"]
 [ext_resource type="Texture2D" uid="uid://dq7u67nfmm3a7" path="res://assets/outside_0.jpg" id="1_uli44"]
@@ -6,6 +6,7 @@
 [ext_resource type="Script" path="res://src/UI.gd" id="2_edhfa"]
 [ext_resource type="Script" path="res://src/Camera.gd" id="2_kdwmv"]
 [ext_resource type="PackedScene" uid="uid://c6217bo4dts2i" path="res://src/Teleporter.tscn" id="3_ajf81"]
+[ext_resource type="PackedScene" uid="uid://dwrrbgry634tu" path="res://src/TeleportNode.tscn" id="5_211ej"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_82jvv"]
 albedo_texture = ExtResource("1_uli44")
@@ -28,6 +29,7 @@ script = ExtResource("1_vmn6e")
 
 [node name="NodeViewer" type="Node3D" parent="."]
 unique_name_in_owner = true
+visible = false
 script = ExtResource("1_g7wbb")
 
 [node name="Bubble" type="MeshInstance3D" parent="NodeViewer"]
@@ -52,6 +54,16 @@ omni_attenuation = 1e-05
 
 [node name="TeleportNodes" type="Node2D" parent="."]
 unique_name_in_owner = true
+
+[node name="TeleportNode" parent="TeleportNodes" instance=ExtResource("5_211ej")]
+position = Vector2(313, 331)
+
+[node name="TeleportNode2" parent="TeleportNodes" instance=ExtResource("5_211ej")]
+position = Vector2(594, 331)
+teleport_connections = [NodePath("../TeleportNode"), NodePath("../TeleportNode3")]
+
+[node name="TeleportNode3" parent="TeleportNodes" instance=ExtResource("5_211ej")]
+position = Vector2(968, 312)
 
 [node name="Camera2D" type="Camera2D" parent="."]
 unique_name_in_owner = true
