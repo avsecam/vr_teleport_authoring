@@ -106,15 +106,19 @@ func _on_save_requested():
 		var node: TeleportNode = nodes.get_child(i)
 		var filename: String = full_dir_name + node.area_name.to_pascal_case() + ".tscn"
 		
-		var saved_tp_node: SavedTeleportNode = preload("res://src/SavedTeleportNode.tscn").instantiate()
+		var saved_tp_node = preload("res://src/SavedTeleportNode.tscn").instantiate()
 		saved_tp_node.panorama_texture = node.sprite_texture
 		saved_tp_node.area_name = node.area_name
 		
 		for j in node.teleporters.size():
 			var teleporter: Teleporter = node.teleporters[j]
-#			teleporter.teleport_location_resource_path = 
+			teleporter.teleport_location_resource_path = \
+				full_dir_name + teleporter.teleport_location.area_name.to_pascal_case() + ".tscn"
+			saved_tp_node.teleporters.append(teleporter)
 		
 		var packed: PackedScene = PackedScene.new()
+		packed.pack(saved_tp_node as Node3D)
+		ResourceSaver.save(packed, filename, ResourceSaver.FLAG_BUNDLE_RESOURCES)
 	
 	# Open folder containing scenes
 	OS.shell_show_in_file_manager(ProjectSettings.globalize_path(full_dir_name))
