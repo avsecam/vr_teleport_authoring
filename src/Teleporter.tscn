@@ -8,7 +8,7 @@ height = 0.01
 [sub_resource type="CylinderMesh" id="CylinderMesh_7l22j"]
 height = 0.01
 
-[node name="TeleporterIndicator" type="StaticBody3D"]
+[node name="Teleporter" type="StaticBody3D"]
 script = ExtResource("1_mn2lr")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
