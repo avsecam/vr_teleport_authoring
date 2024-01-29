@@ -14,3 +14,11 @@ func _ready():
 	
 	for teleporter in teleporters:
 		mesh_instance.add_child((teleporter as PackedScene).instantiate())
+
+
+# Add a camera if you will use the following code.
+func _process(delta):
+	if Input.is_action_pressed("ui_left"):
+		$MeshInstance3D/Camera3D.rotate_y(rotation_speed)
+	if Input.is_action_pressed("ui_right"):
+		$MeshInstance3D/Camera3D.rotate_y(-rotation_speed)
