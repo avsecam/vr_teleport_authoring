@@ -122,10 +122,16 @@ func _on_file_dialog_button_pressed():
 
 func _on_file_dialog_file_selected(path: String):
 	var teleport_node: TeleportNode = load("res://src/TeleportNode.tscn").instantiate()
-	teleport_node.sprite_texture = load(path)
+	
+	var image: Image = Image.new()
+	image.load(path)
+	var tex: ImageTexture = ImageTexture.new()
+	tex.set_image(image)
+	teleport_node.sprite_texture = tex
+	
 	teleport_node.area_name = path.get_file()
 	
-	Events.emit_signal("teleport_node_add_requested", teleport_node)
+	Events.teleport_node_add_requested.emit(teleport_node)
 
 
 func _on_delete_button_pressed():

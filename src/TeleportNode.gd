@@ -6,7 +6,7 @@ extends StaticBody2D
 @onready var sprite: Sprite2D = $Sprite2D
 @onready var line_edit: LineEdit = $LineEdit
 
-@export var sprite_texture: Texture2D
+var sprite_texture
 @export var area_name: String
 
 @export var teleport_connections: Array # of TeleportNode NodePaths
@@ -21,7 +21,7 @@ func _ready():
 	line_edit.text_submitted.connect(_on_line_edit_text_submitted)
 	line_edit.text_changed.connect(_on_line_edit_text_changed)
 	
-	sprite.texture = sprite_texture
+	sprite.texture = sprite_texture if sprite_texture else preload("res://icon.svg")
 	line_edit.text = area_name
 	
 	# Make teleport_connections contain absolute NodePaths
