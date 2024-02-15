@@ -9,7 +9,6 @@ size = Vector2(100, 100)
 [node name="TeleportNode" type="StaticBody2D"]
 input_pickable = true
 script = ExtResource("1_4sgfo")
-sprite_texture = ExtResource("2_4mlm5")
 area_name = "Area Name"
 
 [node name="Connections" type="Node2D" parent="."]

@@ -2,7 +2,7 @@ extends Node3D
 
 @onready var mesh_instance: MeshInstance3D = $MeshInstance3D
 
-@export var panorama_texture: Texture2D
+@export var panorama_texture_filename: String
 @export var area_name: String
 
 @export var teleporters: Array # of Teleporter PackedScenes
@@ -10,7 +10,7 @@ extends Node3D
 
 
 func _ready():
-	mesh_instance.mesh.material.albedo_texture = panorama_texture
+	mesh_instance.mesh.material.albedo_texture = (load(panorama_texture_filename) as Texture2D)
 	
 	for teleporter in teleporters:
 		mesh_instance.add_child((teleporter as PackedScene).instantiate())

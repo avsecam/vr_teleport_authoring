@@ -104,24 +104,28 @@ func _on_save_requested():
 	
 	for i in nodes.get_child_count():
 		var node: TeleportNode = nodes.get_child(i)
-		var filename: String = full_dir_name + node.area_name.to_pascal_case() + ".tscn"
+		var filename: String = full_dir_name + node.area_name.to_pascal_case() + ".json"
+		var image_filename: String = full_dir_name + node.area_name.to_pascal_case() + ".jpg"
 		
-		var saved_tp_node = preload("res://src/SavedTeleportNode.tscn").instantiate()
-		saved_tp_node.panorama_texture = node.sprite_texture
-		saved_tp_node.area_name = node.area_name
+		(node.sprite_texture as Texture2D).get_image().save_jpg(image_filename)
+		var saved_tp_node = {
+			"panorama_texture_filename": ProjectSettings.globalize_path(image_filename),
+			"area_name": node.area_name,
+			"teleporter_positions": [] # {position, teleport_location_filepath}
+		}
 		
 		for j in node.teleporters.size():
 			var teleporter: Teleporter = node.teleporters[j]
-			teleporter.teleport_location_resource_path = \
-				full_dir_name + teleporter.teleport_location.area_name.to_pascal_case() + ".tscn"
-			
-			var packed_teleporter: PackedScene = PackedScene.new()
-			packed_teleporter.pack(teleporter)
-			saved_tp_node.teleporters.append(packed_teleporter)
+			(saved_tp_node.teleporter_positions as Array).append({
+				"position_x": teleporter.position.x,
+				"position_y": teleporter.position.y,
+				"position_z": teleporter.position.z,
+				"teleport_location_filename": teleporter.teleport_location.area_name.to_pascal_case() + ".json"
+			})
 		
-		var packed: PackedScene = PackedScene.new()
-		packed.pack(saved_tp_node as Node3D)
-		ResourceSaver.save(packed, filename)
+		var file = FileAccess.open(filename, FileAccess.WRITE)
+		file.store_string(JSON.stringify(saved_tp_node))
+		
 	
 	# Open folder containing scenes
 	OS.shell_show_in_file_manager(ProjectSettings.globalize_path(full_dir_name))

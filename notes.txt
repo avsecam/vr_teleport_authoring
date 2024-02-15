@@ -6,3 +6,6 @@ what to save:
 	TeleportNode
 		convert into something that only contains the Teleporters, 360 image
 		Teleporter.teleport_location should be converted to resource path
+
+
+pwedeng nasa mismong teleporter yung name ng area and a delete button
