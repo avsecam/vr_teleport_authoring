@@ -9,3 +9,5 @@ what to save:
 
 
 pwedeng nasa mismong teleporter yung name ng area and a delete button
+
+add feature that allows user to pick the NORTH direction of the 360 image
