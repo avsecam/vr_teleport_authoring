@@ -109,7 +109,7 @@ func _on_save_requested():
 		
 		(node.sprite_texture as Texture2D).get_image().save_jpg(image_filename)
 		var saved_tp_node = {
-			"panorama_texture_filename": ProjectSettings.globalize_path(image_filename),
+			"panorama_texture_filename": node.area_name.to_pascal_case() + ".jpg",
 			"area_name": node.area_name,
 			"teleporter_positions": [] # {position, teleport_location_filepath}
 		}
