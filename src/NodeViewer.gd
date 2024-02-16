@@ -46,6 +46,9 @@ func _process(delta):
 	if Input.is_action_pressed("ui_down"):
 		indicator_anchor.rotate_x(-rotation_speed)
 	
+	if Input.is_action_just_pressed("place_base_rotation"):
+		replace_base_rotation()
+	
 	if not can_add_teleporter():
 		indicator.visible = false
 	else:
@@ -81,6 +84,13 @@ func add_teleporter():
 	node.teleporters.append(teleporter)
 	
 	Events.teleporter_add_requested.emit(node, teleporter)
+
+
+func replace_base_rotation():
+	var view_rotation = camera.rotation_degrees.y
+	node.base_rotation = view_rotation
+	
+	print(view_rotation, " set as base rotation.")
 
 
 func _on_teleport_node_enter_requested(node: TeleportNode):

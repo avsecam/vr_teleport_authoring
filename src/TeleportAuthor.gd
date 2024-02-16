@@ -111,6 +111,7 @@ func _on_save_requested():
 		var saved_tp_node = {
 			"panorama_texture_filename": node.area_name.to_pascal_case() + ".jpg",
 			"area_name": node.area_name,
+			"base_rotation": node.base_rotation if node.base_rotation else 0,
 			"teleporter_positions": [] # {position, teleport_location_filepath}
 		}
 		

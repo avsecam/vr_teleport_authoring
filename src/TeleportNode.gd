@@ -13,6 +13,8 @@ var sprite_texture
 
 var teleporters: Array # of Teleporters
 
+var base_rotation: float # normal facing rotation when user enters the node
+
 var selected: bool = false
 var can_drag: bool = false
 

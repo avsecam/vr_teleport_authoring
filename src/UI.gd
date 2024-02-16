@@ -56,6 +56,9 @@ func _process(delta):
 	
 	# Connection list rendering
 	connection_list.visible = authoring.in_edit_node_mode
+	
+	# Node viewer actions rendering
+#	if authoring.in_edit_node_mode: blablabla
 
 
 func update_connection_list(node: TeleportNode):
