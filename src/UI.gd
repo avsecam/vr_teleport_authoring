@@ -163,7 +163,7 @@ func _on_enter_button_pressed():
 
 
 func _on_save_button_pressed():
-	Events.save_requested.emit()
+	Events.export_requested.emit()
 
 
 func _on_teleport_node_enter_requested(node: TeleportNode):

@@ -17,7 +17,7 @@ func _ready():
 	Events.teleport_node_edit_confirm_requested.connect(_on_teleport_node_edit_confirm_requested)
 	Events.teleport_node_connection_add_requested.connect(_on_teleport_node_connection_add_requested)
 	
-	Events.save_requested.connect(_on_save_requested)
+	Events.export_requested.connect(_on_export_requested)
 
 
 func _process(delta):
@@ -94,7 +94,7 @@ func _on_teleport_node_connection_add_requested(from: TeleportNode, to: Teleport
 
 
 # TODO: Dont allow same named nodes
-func _on_save_requested():
+func _on_export_requested():
 	var folder_name: String = "saved_" + str(floor(Time.get_unix_time_from_system()))
 	var dir: DirAccess = DirAccess.open("user://")
 	if dir:
