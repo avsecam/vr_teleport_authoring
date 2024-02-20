@@ -7,7 +7,6 @@ const connection_entry: PackedScene = preload("res://src/ConnectionEntry.tscn")
 
 @onready var connection_list: VBoxContainer = $LeftUI/VBoxContainer/ConnectionList
 
-@onready var file_dialog_button: Button = $Container/HBoxContainer/Add
 @onready var file_dialog: FileDialog = $FileDialog
 
 @onready var add_button: Button = $Container/HBoxContainer/Add
@@ -16,17 +15,19 @@ const connection_entry: PackedScene = preload("res://src/ConnectionEntry.tscn")
 @onready var enter_button: Button = $Container/HBoxContainer/Enter
 @onready var export_button: Button = $Container/HBoxContainer/Export
 @onready var save_button: Button = $Container/HBoxContainer/Save
+@onready var load_button: Button = $Container/HBoxContainer/Load
 
 
 func _ready():
-	file_dialog_button.pressed.connect(_on_file_dialog_button_pressed)
-	file_dialog.file_selected.connect(_on_file_dialog_file_selected)
-	
+	add_button.pressed.connect(_on_add_button_pressed)
 	delete_button.pressed.connect(_on_delete_button_pressed)
 	edit_button.pressed.connect(_on_edit_button_pressed)
 	enter_button.pressed.connect(_on_enter_button_pressed)
 	export_button.pressed.connect(_on_export_button_pressed)
 	save_button.pressed.connect(_on_save_button_pressed)
+	load_button.pressed.connect(_on_load_button_pressed)
+	
+	file_dialog.file_selected.connect(_on_file_dialog_file_selected)
 	
 	Events.teleport_node_enter_requested.connect(_on_teleport_node_enter_requested)
 	Events.teleport_node_exit_requested.connect(_on_teleport_node_exit_requested)
@@ -123,7 +124,8 @@ func get_focused_connection_entry():
 	return null
 
 
-func _on_file_dialog_button_pressed():
+func _on_add_button_pressed():
+	file_dialog.current_dir = ProjectSettings.globalize_path("res://")
 	file_dialog.show()
 
 
@@ -168,6 +170,11 @@ func _on_export_button_pressed():
 
 func _on_save_button_pressed():
 	Events.save_requested.emit()
+
+
+func _on_load_button_pressed():
+	file_dialog.current_dir = ProjectSettings.globalize_path("user://")
+	file_dialog.show()
 
 
 func _on_teleport_node_enter_requested(node: TeleportNode):
