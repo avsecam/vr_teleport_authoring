@@ -17,3 +17,4 @@ signal connection_entry_select_requested(entry: ConnectionEntry)
 signal connection_entry_delete_requested(entry: ConnectionEntry)
 
 signal export_requested()
+signal save_requested()
