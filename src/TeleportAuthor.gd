@@ -18,6 +18,7 @@ func _ready():
 	Events.teleport_node_connection_add_requested.connect(_on_teleport_node_connection_add_requested)
 	
 	Events.export_requested.connect(_on_export_requested)
+	Events.save_requested.connect(_on_save_requested)
 
 
 func _process(delta):
@@ -95,7 +96,7 @@ func _on_teleport_node_connection_add_requested(from: TeleportNode, to: Teleport
 
 # TODO: Dont allow same named nodes
 func _on_export_requested():
-	var folder_name: String = "saved_" + str(floor(Time.get_unix_time_from_system()))
+	var folder_name: String = "exported_" + str(floor(Time.get_unix_time_from_system()))
 	var dir: DirAccess = DirAccess.open("user://")
 	if dir:
 		dir.make_dir(folder_name)
@@ -107,8 +108,10 @@ func _on_export_requested():
 		var filename: String = full_dir_name + node.area_name.to_pascal_case() + ".json"
 		var image_filename: String = full_dir_name + node.area_name.to_pascal_case() + ".jpg"
 		
-		(node.sprite_texture as Texture2D).get_image().save_jpg(image_filename)
-		var saved_tp_node = {
+		var image = Image.load_from_file(node.sprite_texture_filename)
+		image.save_jpg(image_filename)
+		
+		var exported_tp_node = {
 			"panorama_texture_filename": node.area_name.to_pascal_case() + ".jpg",
 			"area_name": node.area_name,
 			"base_rotation": node.base_rotation if node.base_rotation else 0,
@@ -117,7 +120,7 @@ func _on_export_requested():
 		
 		for j in node.teleporters.size():
 			var teleporter: Teleporter = node.teleporters[j]
-			(saved_tp_node.teleporter_positions as Array).append({
+			(exported_tp_node.teleporter_positions as Array).append({
 				"position_x": teleporter.position.x,
 				"position_y": teleporter.position.y,
 				"position_z": teleporter.position.z,
@@ -125,8 +128,39 @@ func _on_export_requested():
 			})
 		
 		var file = FileAccess.open(filename, FileAccess.WRITE)
-		file.store_string(JSON.stringify(saved_tp_node))
+		file.store_string(JSON.stringify(exported_tp_node))
 		
 	
 	# Open folder containing scenes
+	OS.shell_show_in_file_manager(ProjectSettings.globalize_path(full_dir_name))
+
+
+func _on_save_requested():
+	var folder_name: String = "saved_" + str(floor(Time.get_unix_time_from_system()))
+	var dir: DirAccess = DirAccess.open("user://")
+	if dir:
+		dir.make_dir(folder_name)
+	
+	var full_dir_name: String = "user://" + folder_name + "/"
+	
+	# Save children of TeleportNodes
+	for i in %TeleportNodes.get_child_count():
+		var teleportNode: TeleportNode = %TeleportNodes.get_child(i)
+		
+		var savedTeleportNode: TeleportNode = teleportNode.duplicate()
+		
+		# Save separate 360 image
+		var image_filename: String = full_dir_name + savedTeleportNode.name + ".jpg"
+		
+		var image = Image.load_from_file(savedTeleportNode.sprite_texture_filename)
+		image.save_jpg(image_filename)
+		
+		# Change sprite_texture_filename dependency
+		savedTeleportNode.sprite_texture_filename = image_filename
+		
+		var packed: PackedScene = PackedScene.new()
+		packed.pack(savedTeleportNode)
+		ResourceSaver.save(packed, full_dir_name + savedTeleportNode.name + ".tscn")
+		await get_tree().process_frame
+	
 	OS.shell_show_in_file_manager(ProjectSettings.globalize_path(full_dir_name))

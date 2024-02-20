@@ -73,6 +73,19 @@ mouse_filter = 2
 script = ExtResource("2_edhfa")
 metadata/_edit_use_anchors_ = true
 
+[node name="TopUI" type="MarginContainer" parent="Camera2D/CanvasLayer/UI"]
+layout_mode = 1
+anchors_preset = 10
+anchor_right = 1.0
+offset_bottom = 46.0
+grow_horizontal = 2
+theme_override_constants/margin_top = 20
+
+[node name="ProjectTitle" type="Label" parent="Camera2D/CanvasLayer/UI/TopUI"]
+layout_mode = 2
+text = "Untitled Project"
+horizontal_alignment = 1
+
 [node name="LeftUI" type="MarginContainer" parent="Camera2D/CanvasLayer/UI"]
 layout_mode = 1
 anchors_preset = 9
@@ -160,7 +173,7 @@ theme_override_constants/margin_top = 10
 theme_override_constants/margin_bottom = 10
 
 [node name="ColorRect" type="ColorRect" parent="Camera2D/CanvasLayer/UI/Container/HBoxContainer/Legend/HBoxContainer/MarginContainer"]
-custom_minimum_size = Vector2(250, 0)
+custom_minimum_size = Vector2(150, 0)
 layout_mode = 2
 color = Color(1, 1, 1, 0.588235)
 
@@ -178,7 +191,7 @@ theme_override_constants/margin_top = 10
 theme_override_constants/margin_bottom = 10
 
 [node name="ColorRect" type="ColorRect" parent="Camera2D/CanvasLayer/UI/Container/HBoxContainer/Legend/HBoxContainer2/MarginContainer"]
-custom_minimum_size = Vector2(250, 0)
+custom_minimum_size = Vector2(150, 0)
 layout_mode = 2
 color = Color(1, 0, 0, 1)
 
@@ -196,7 +209,7 @@ theme_override_constants/margin_top = 10
 theme_override_constants/margin_bottom = 10
 
 [node name="ColorRect2" type="ColorRect" parent="Camera2D/CanvasLayer/UI/Container/HBoxContainer/Legend/HBoxContainer3/MarginContainer"]
-custom_minimum_size = Vector2(250, 0)
+custom_minimum_size = Vector2(150, 0)
 layout_mode = 2
 color = Color(0, 0, 1, 1)
 
@@ -204,6 +217,11 @@ color = Color(0, 0, 1, 1)
 layout_mode = 2
 theme_override_font_sizes/font_size = 0
 text = "TELEPORTER SET"
+
+[node name="Export" type="Button" parent="Camera2D/CanvasLayer/UI/Container/HBoxContainer"]
+custom_minimum_size = Vector2(100, 0)
+layout_mode = 2
+text = "EXPORT"
 
 [node name="Save" type="Button" parent="Camera2D/CanvasLayer/UI/Container/HBoxContainer"]
 custom_minimum_size = Vector2(100, 0)

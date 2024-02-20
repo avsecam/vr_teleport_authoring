@@ -3,6 +3,8 @@ extends Control
 
 const connection_entry: PackedScene = preload("res://src/ConnectionEntry.tscn")
 
+@onready var project_title: Label = $TopUI/ProjectTitle
+
 @onready var connection_list: VBoxContainer = $LeftUI/VBoxContainer/ConnectionList
 
 @onready var file_dialog_button: Button = $Container/HBoxContainer/Add
@@ -12,6 +14,7 @@ const connection_entry: PackedScene = preload("res://src/ConnectionEntry.tscn")
 @onready var delete_button: Button = $Container/HBoxContainer/Delete
 @onready var edit_button: Button = $Container/HBoxContainer/Edit
 @onready var enter_button: Button = $Container/HBoxContainer/Enter
+@onready var export_button: Button = $Container/HBoxContainer/Export
 @onready var save_button: Button = $Container/HBoxContainer/Save
 
 
@@ -22,6 +25,7 @@ func _ready():
 	delete_button.pressed.connect(_on_delete_button_pressed)
 	edit_button.pressed.connect(_on_edit_button_pressed)
 	enter_button.pressed.connect(_on_enter_button_pressed)
+	export_button.pressed.connect(_on_export_button_pressed)
 	save_button.pressed.connect(_on_save_button_pressed)
 	
 	Events.teleport_node_enter_requested.connect(_on_teleport_node_enter_requested)
@@ -126,11 +130,7 @@ func _on_file_dialog_button_pressed():
 func _on_file_dialog_file_selected(path: String):
 	var teleport_node: TeleportNode = load("res://src/TeleportNode.tscn").instantiate()
 	
-	var image: Image = Image.new()
-	image.load(path)
-	var tex: ImageTexture = ImageTexture.new()
-	tex.set_image(image)
-	teleport_node.sprite_texture = tex
+	teleport_node.sprite_texture_filename = path
 	
 	teleport_node.area_name = path.get_file()
 	
@@ -162,8 +162,12 @@ func _on_enter_button_pressed():
 		Events.teleport_node_enter_requested.emit(selected_child)
 
 
-func _on_save_button_pressed():
+func _on_export_button_pressed():
 	Events.export_requested.emit()
+
+
+func _on_save_button_pressed():
+	Events.save_requested.emit()
 
 
 func _on_teleport_node_enter_requested(node: TeleportNode):
