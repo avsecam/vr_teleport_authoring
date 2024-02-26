@@ -25,7 +25,12 @@ func _ready():
 	line_edit.text_changed.connect(_on_line_edit_text_changed)
 	
 	# Set preview image
-	sprite.texture = load(sprite_texture_filename) if sprite_texture_filename else preload("res://icon.svg")
+	var image = Image.new()
+	var err = image.load(sprite_texture_filename)
+	if err != OK:
+		push_error("Error loading image from ", sprite_texture_filename)
+	var texture = ImageTexture.create_from_image(image)
+	sprite.texture = texture if sprite_texture_filename else preload("res://icon.svg")
 	line_edit.text = area_name
 	
 	# Make teleport_connections contain absolute NodePaths
