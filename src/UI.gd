@@ -169,7 +169,10 @@ func _on_export_button_pressed():
 
 
 func _on_save_button_pressed():
+	save_button.text = "..."
 	Events.save_requested.emit()
+	await Signal(Events.save_finished)
+	save_button.text = "SAVE"
 
 
 func _on_load_button_pressed():

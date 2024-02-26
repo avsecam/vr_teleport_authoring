@@ -86,12 +86,12 @@ func _on_teleport_node_connection_add_requested(from: TeleportNode, to: Teleport
 	var teleport_connections = from.teleport_connections
 	
 	for i in range(teleport_connections.size()):
-		var node: NodePath = teleport_connections[i]
-		if node.get_name(node.get_name_count() - 1) == to.name:
+		var node_name: String = teleport_connections[i]
+		if node_name == to.name:
 			teleport_connections.remove_at(i)
 			return
 	
-	from.add_teleport_connection(to)
+	from.add_teleport_connection(to.name)
 
 
 # TODO: Dont allow same named nodes
@@ -145,22 +145,17 @@ func _on_save_requested():
 	
 	# Save children of TeleportNodes
 	for i in %TeleportNodes.get_child_count():
-		var teleportNode: TeleportNode = %TeleportNodes.get_child(i)
+		var teleport_node: TeleportNode = %TeleportNodes.get_child(i)
 		
-		var savedTeleportNode: TeleportNode = teleportNode.duplicate()
+		var saved_teleport_node: SavedTeleportNode
+		saved_teleport_node.area_name = teleport_node.area_name
+		saved_teleport_node.sprite_texture_filename = teleport_node.sprite_texture_filename
+#		for j in teleport_node.teleport_connections.size():
+			
 		
-		# Save separate 360 image
-		var image_filename: String = full_dir_name + savedTeleportNode.name + ".jpg"
-		
-		var image = Image.load_from_file(savedTeleportNode.sprite_texture_filename)
-		image.save_jpg(image_filename)
-		
-		# Change sprite_texture_filename dependency
-		savedTeleportNode.sprite_texture_filename = image_filename
-		
-		var packed: PackedScene = PackedScene.new()
-		packed.pack(savedTeleportNode)
-		ResourceSaver.save(packed, full_dir_name + savedTeleportNode.name + ".tscn")
-		await get_tree().process_frame
+#		var packed: PackedScene = PackedScene.new()
+#		packed.pack(savedTeleportNode)
+#		var err = ResourceSaver.save(packed, full_dir_name + savedTeleportNode.name + ".tscn")
 	
 	OS.shell_show_in_file_manager(ProjectSettings.globalize_path(full_dir_name))
+	Events.save_finished.emit()

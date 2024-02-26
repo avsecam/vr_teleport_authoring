@@ -10,7 +10,7 @@ extends StaticBody2D
 
 @export var area_name: String
 
-@export var teleport_connections: Array # of TeleportNode NodePaths
+@export var teleport_connections: Array # of TeleportNode names
 
 var teleporters: Array # of Teleporters
 
@@ -28,9 +28,12 @@ func _ready():
 	var image = Image.new()
 	var err = image.load(sprite_texture_filename)
 	if err != OK:
-		push_error("Error loading image from ", sprite_texture_filename)
-	var texture = ImageTexture.create_from_image(image)
-	sprite.texture = texture if sprite_texture_filename else preload("res://icon.svg")
+		push_warning("Error loading image from ", sprite_texture_filename)
+		sprite.texture = preload("res://icon.svg")
+	else:
+		var texture = ImageTexture.create_from_image(image)
+		sprite.texture = texture
+	
 	line_edit.text = area_name
 	
 	# Make teleport_connections contain absolute NodePaths
@@ -74,14 +77,14 @@ func _process(delta):
 	
 	# Draw path lines
 	for i in range(teleport_connections.size()):
-		var node: String = teleport_connections[i]
+		var node: TeleportNode = get_parent().find_child(teleport_connections[i])
 		var line: Line2D = connections.get_child(i)
-		if get_node_or_null(node) == null:
+		print(get_parent().name)
+		if node == null:
 			continue
-		
 		line.clear_points()
 		line.add_point(self.global_position)
-		line.add_point((get_node(node) as TeleportNode).global_position)
+		line.add_point(node.global_position)
 		line.position = -self.global_position
 		
 		if self.selected:
@@ -90,7 +93,7 @@ func _process(delta):
 			# Check teleporters if there is a corresponding teleporter with
 			# a teleport_location that matches node
 			for teleporter in teleporters:
-				if (teleporter as Teleporter).teleport_location == get_node(node):
+				if (teleporter as Teleporter).teleport_location == node:
 					line.default_color = Color(0, 0, 1)
 		else:
 			line.default_color = Color(1, 1, 1, 0.5)
@@ -98,8 +101,8 @@ func _process(delta):
 		line.width = 4 if self.selected else 2
 
 
-func add_teleport_connection(node: TeleportNode):
-	teleport_connections.append(node.get_path())
+func add_teleport_connection(node: String):
+	teleport_connections.append(node)
 
 
 func _on_line_edit_text_changed(new_text: String):
