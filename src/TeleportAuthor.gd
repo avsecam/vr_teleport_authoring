@@ -21,7 +21,7 @@ func _ready():
 	Events.save_requested.connect(_on_save_requested)
 
 
-func _process(delta):
+func _process(_delta):
 	%TeleportNodes.visible = not in_edit_node_mode
 
 
@@ -74,11 +74,11 @@ func _on_teleport_node_delete_requested(node: TeleportNode):
 	node.queue_free()
 
 
-func _on_teleport_node_edit_requested(node: TeleportNode):
+func _on_teleport_node_edit_requested(_node: TeleportNode):
 	in_edit_connections_mode = true
 
 
-func _on_teleport_node_edit_confirm_requested(node: TeleportNode):
+func _on_teleport_node_edit_confirm_requested(_node: TeleportNode):
 	in_edit_connections_mode = false
 
 
@@ -114,7 +114,7 @@ func _on_export_requested():
 		var exported_tp_node = {
 			"panorama_texture_filename": node.area_name.to_pascal_case() + ".jpg",
 			"area_name": node.area_name,
-			"base_rotation": node.base_rotation if node.base_rotation else 0,
+			"base_rotation": node.base_rotation if node.base_rotation else float(0),
 			"teleporter_positions": [] # {position, teleport_location_filepath}
 		}
 		
