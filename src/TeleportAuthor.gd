@@ -86,12 +86,12 @@ func _on_teleport_node_connection_add_requested(from: TeleportNode, to: Teleport
 	var teleport_connections = from.teleport_connections
 	
 	for i in range(teleport_connections.size()):
-		var node_name: String = teleport_connections[i]
-		if node_name == to.name:
+		var node: NodePath = teleport_connections[i]
+		if node.get_name(node.get_name_count() - 1) == to.name:
 			teleport_connections.remove_at(i)
 			return
 	
-	from.add_teleport_connection(to.name)
+	from.add_teleport_connection(to)
 
 
 # TODO: Dont allow same named nodes
@@ -147,15 +147,27 @@ func _on_save_requested():
 	for i in %TeleportNodes.get_child_count():
 		var teleport_node: TeleportNode = %TeleportNodes.get_child(i)
 		
-		var saved_teleport_node: SavedTeleportNode
+		var saved_teleport_node: SavedTeleportNode = SavedTeleportNode.new()
 		saved_teleport_node.area_name = teleport_node.area_name
 		saved_teleport_node.sprite_texture_filename = teleport_node.sprite_texture_filename
-#		for j in teleport_node.teleport_connections.size():
-			
+		saved_teleport_node.node_path = teleport_node.get_path()
 		
-#		var packed: PackedScene = PackedScene.new()
-#		packed.pack(savedTeleportNode)
-#		var err = ResourceSaver.save(packed, full_dir_name + savedTeleportNode.name + ".tscn")
+		# Save connections
+		for j in teleport_node.teleport_connections.size():
+			var connection: NodePath = teleport_node.teleport_connections[j]
+			
+			saved_teleport_node.teleport_connections_node_paths.append(connection)
+		
+		# Save teleporters
+		for j in teleport_node.teleporters.size():
+			var teleporter: Teleporter = teleport_node.teleporters[j]
+			
+			saved_teleport_node.teleporters.append({
+				"position": teleporter.position,
+				"to": teleporter.teleport_location.get_path()
+			})
+		
+		ResourceSaver.save(saved_teleport_node, full_dir_name + saved_teleport_node.area_name + ".tres")
 	
 	OS.shell_show_in_file_manager(ProjectSettings.globalize_path(full_dir_name))
 	Events.save_finished.emit()
