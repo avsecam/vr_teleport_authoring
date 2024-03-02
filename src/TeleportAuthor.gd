@@ -19,6 +19,7 @@ func _ready():
 	
 	Events.export_requested.connect(_on_export_requested)
 	Events.save_requested.connect(_on_save_requested)
+	Events.load_requested.connect(_on_load_requested)
 
 
 func _process(_delta):
@@ -151,6 +152,7 @@ func _on_save_requested():
 		saved_teleport_node.area_name = teleport_node.area_name
 		saved_teleport_node.sprite_texture_filename = teleport_node.sprite_texture_filename
 		saved_teleport_node.node_path = teleport_node.get_path()
+		saved_teleport_node.overview_position = teleport_node.position
 		
 		# Save connections
 		for j in teleport_node.teleport_connections.size():
@@ -161,9 +163,12 @@ func _on_save_requested():
 		# Save teleporters
 		for j in teleport_node.teleporters.size():
 			var teleporter: Teleporter = teleport_node.teleporters[j]
+
+			print(teleporter.global_position)
 			
 			saved_teleport_node.teleporters.append({
-				"position": teleporter.position,
+				"global_position": teleporter.global_position,
+				"global_rotation": teleporter.global_rotation,
 				"to": teleporter.teleport_location.get_path()
 			})
 		
@@ -171,3 +176,57 @@ func _on_save_requested():
 	
 	OS.shell_show_in_file_manager(ProjectSettings.globalize_path(full_dir_name))
 	Events.save_finished.emit()
+
+
+func _on_load_requested(file_path: String):
+	# Clear TeleportNodes
+	for i in %TeleportNodes.get_child_count():
+		var teleport_node: TeleportNode = %TeleportNodes.get_child(0)
+		%TeleportNodes.remove_child(teleport_node)
+		teleport_node.queue_free()
+	
+	# Load TeleportNodes
+	var dir_access: DirAccess = DirAccess.open(file_path)
+	var files: PackedStringArray = dir_access.get_files()
+	for i in files.size():
+		var file: String = files[i]
+		if file.get_extension() != "tres":
+			continue
+		var saved_teleport_node: SavedTeleportNode = ResourceLoader.load(file_path + "/" + file)
+		
+		var teleport_node: TeleportNode = preload("res://src/TeleportNode.tscn").instantiate()
+		teleport_node.area_name = saved_teleport_node.area_name
+		teleport_node.sprite_texture_filename = saved_teleport_node.sprite_texture_filename
+		teleport_node.position = saved_teleport_node.overview_position
+		
+		var saved_teleport_node_node_path: NodePath = saved_teleport_node.node_path
+		teleport_node.name = saved_teleport_node_node_path.get_name(saved_teleport_node_node_path.get_name_count() - 1)
+		
+		%TeleportNodes.add_child(teleport_node)
+	
+	# Add connections and teleporters
+	for i in files.size():
+		var file: String = files[i]
+		var saved_teleport_node: SavedTeleportNode = ResourceLoader.load(file_path + "/" + file)
+		if file.get_extension() != "tres":
+			continue
+		
+		var teleport_node: TeleportNode = %TeleportNodes.get_child(i)
+		
+		# Load connections
+		for j in saved_teleport_node.teleport_connections_node_paths.size():
+			var connection: NodePath = saved_teleport_node.teleport_connections_node_paths[j]
+			
+			teleport_node.teleport_connections.append(connection)
+		
+		# Load teleporters
+		for j in saved_teleport_node.teleporters.size():
+			var teleporter: Dictionary = saved_teleport_node.teleporters[j]
+			
+			var new_teleporter: Teleporter = preload("res://src/Teleporter.tscn").instantiate()
+			new_teleporter.global_position = teleporter["global_position"]
+			new_teleporter.global_rotation = teleporter["global_rotation"]
+			new_teleporter.teleport_location = get_node(teleporter["to"])
+			
+			teleport_node.teleporters.append(new_teleporter)
+		
