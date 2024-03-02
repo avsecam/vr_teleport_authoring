@@ -28,6 +28,7 @@ func _ready():
 	load_button.pressed.connect(_on_load_button_pressed)
 	
 	file_dialog.file_selected.connect(_on_file_dialog_file_selected)
+	file_dialog.dir_selected.connect(_on_file_dialog_dir_selected)
 	
 	Events.teleport_node_enter_requested.connect(_on_teleport_node_enter_requested)
 	Events.teleport_node_exit_requested.connect(_on_teleport_node_exit_requested)
@@ -125,6 +126,7 @@ func get_focused_connection_entry():
 
 
 func _on_add_button_pressed():
+	file_dialog.file_mode = FileDialog.FILE_MODE_OPEN_FILE
 	file_dialog.current_dir = ProjectSettings.globalize_path("res://")
 	file_dialog.show()
 
@@ -137,6 +139,11 @@ func _on_file_dialog_file_selected(path: String):
 	teleport_node.area_name = path.get_file()
 	
 	Events.teleport_node_add_requested.emit(teleport_node)
+
+
+func _on_file_dialog_dir_selected(path: String):
+	project_title.text = path.get_file()
+	Events.load_requested.emit(path)
 
 
 func _on_delete_button_pressed():
@@ -176,6 +183,7 @@ func _on_save_button_pressed():
 
 
 func _on_load_button_pressed():
+	file_dialog.file_mode = FileDialog.FILE_MODE_OPEN_DIR
 	file_dialog.current_dir = ProjectSettings.globalize_path("user://")
 	file_dialog.show()
 
