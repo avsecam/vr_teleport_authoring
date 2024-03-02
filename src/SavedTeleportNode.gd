@@ -11,4 +11,4 @@ extends Resource
 
 # these arrays' elements should correspond to each other
 @export var teleport_connections_node_paths: Array[NodePath]
-@export var teleporters: Array # of {global_position: Vector3, global_rotation: Vector3, to: NodePath}
+@export var teleporters: Array # of {position: Vector3, rotation: Vector3, to: NodePath}

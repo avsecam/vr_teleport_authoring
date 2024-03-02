@@ -164,11 +164,9 @@ func _on_save_requested():
 		for j in teleport_node.teleporters.size():
 			var teleporter: Teleporter = teleport_node.teleporters[j]
 
-			print(teleporter.global_position)
-			
 			saved_teleport_node.teleporters.append({
-				"global_position": teleporter.global_position,
-				"global_rotation": teleporter.global_rotation,
+				"position": teleporter.position,
+				"rotation": teleporter.rotation,
 				"to": teleporter.teleport_location.get_path()
 			})
 		
@@ -224,8 +222,8 @@ func _on_load_requested(file_path: String):
 			var teleporter: Dictionary = saved_teleport_node.teleporters[j]
 			
 			var new_teleporter: Teleporter = preload("res://src/Teleporter.tscn").instantiate()
-			new_teleporter.global_position = teleporter["global_position"]
-			new_teleporter.global_rotation = teleporter["global_rotation"]
+			new_teleporter.position = teleporter["position"]
+			new_teleporter.rotation = teleporter["rotation"]
 			new_teleporter.teleport_location = get_node(teleporter["to"])
 			
 			teleport_node.teleporters.append(new_teleporter)

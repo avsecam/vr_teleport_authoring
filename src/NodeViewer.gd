@@ -82,7 +82,7 @@ func add_teleporter():
 	teleporter.global_rotation = indicator.global_rotation
 	
 	node.teleporters.append(teleporter)
-	
+
 	Events.teleporter_add_requested.emit(node, teleporter)
 
 
