@@ -7,6 +7,3 @@ extends StaticBody3D
 
 
 var teleport_location: TeleportNode
-
-@export_category("On save")
-@export var teleport_location_resource_path: String
