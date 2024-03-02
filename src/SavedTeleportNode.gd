@@ -7,6 +7,8 @@ extends Resource
 @export var area_name: String
 @export var sprite_texture_filename: String
 
+@export var overview_position: Vector2
+
 # these arrays' elements should correspond to each other
 @export var teleport_connections_node_paths: Array[NodePath]
-@export var teleporters: Array # of {position: Vector3, to: NodePath}
+@export var teleporters: Array # of {global_position: Vector3, global_rotation: Vector3, to: NodePath}
