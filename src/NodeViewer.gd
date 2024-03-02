@@ -31,7 +31,7 @@ func _ready():
 	Events.connection_entry_delete_requested.connect(_on_connection_entry_delete_requested)
 
 
-func _process(delta):
+func _process(_delta):
 	var authoring: TeleportAuthor = self.owner
 	
 	if not authoring.in_edit_node_mode:
@@ -93,13 +93,13 @@ func replace_base_rotation():
 	print(view_rotation, " set as base rotation.")
 
 
-func _on_teleport_node_enter_requested(node: TeleportNode):
-	self.node = node
-	self.mesh.mesh.material.albedo_texture = node.sprite.texture
+func _on_teleport_node_enter_requested(node_to_enter: TeleportNode):
+	self.node = node_to_enter
+	self.mesh.mesh.material.albedo_texture = node_to_enter.sprite.texture
 	
 	# Load teleporters from TeleportNode
-	for i in node.teleporters.size():
-		teleporters.add_child(node.teleporters[i])
+	for i in node_to_enter.teleporters.size():
+		teleporters.add_child(node_to_enter.teleporters[i])
 	
 	%"Camera2D".visible = false
 	self.visible = true
@@ -107,8 +107,8 @@ func _on_teleport_node_enter_requested(node: TeleportNode):
 	self.owner.in_edit_node_mode = true
 
 
-func _on_teleport_node_exit_requested(node: TeleportNode):
-	self.node = node
+func _on_teleport_node_exit_requested(node_to_exit: TeleportNode):
+	self.node = node_to_exit
 	
 	# Clear teleporters
 	for i in teleporters.get_child_count():
