@@ -6,19 +6,34 @@ extends StaticBody2D
 @onready var sprite: Sprite2D = $Sprite2D
 @onready var line_edit: LineEdit = $LineEdit
 
-@export var sprite_texture: Texture2D
+@export var sprite_texture_filename: String
+
 @export var area_name: String
 
-@export var teleport_connections: Array # of TeleportNode NodePaths
+@export var teleport_connections: Array[NodePath] # of TeleportNode NodePaths
 
-var teleporters: Array # of Teleporters
+var teleporters: Array[Teleporter]
+
+var base_rotation: float # normal facing rotation when user enters the node
 
 var selected: bool = false
 var can_drag: bool = false
 
 
 func _ready():
-	sprite.texture = sprite_texture
+	line_edit.text_submitted.connect(_on_line_edit_text_submitted)
+	line_edit.text_changed.connect(_on_line_edit_text_changed)
+	
+	# Set preview image
+	var image = Image.new()
+	var err = image.load(sprite_texture_filename)
+	if err != OK:
+		push_warning("Error loading image from ", sprite_texture_filename)
+		sprite.texture = preload("res://icon.svg")
+	else:
+		var texture = ImageTexture.create_from_image(image)
+		sprite.texture = texture
+	
 	line_edit.text = area_name
 	
 	# Make teleport_connections contain absolute NodePaths
@@ -88,3 +103,11 @@ func _process(delta):
 
 func add_teleport_connection(node: TeleportNode):
 	teleport_connections.append(node.get_path())
+
+
+func _on_line_edit_text_changed(new_text: String):
+	area_name = new_text
+
+
+func _on_line_edit_text_submitted(new_text: String):
+	line_edit.release_focus()

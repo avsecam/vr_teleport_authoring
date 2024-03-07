@@ -3,24 +3,32 @@ extends Control
 
 const connection_entry: PackedScene = preload("res://src/ConnectionEntry.tscn")
 
+@onready var project_title: Label = $TopUI/ProjectTitle
+
 @onready var connection_list: VBoxContainer = $LeftUI/VBoxContainer/ConnectionList
 
-@onready var file_dialog_button: Button = $Container/HBoxContainer/Add
 @onready var file_dialog: FileDialog = $FileDialog
 
 @onready var add_button: Button = $Container/HBoxContainer/Add
 @onready var delete_button: Button = $Container/HBoxContainer/Delete
 @onready var edit_button: Button = $Container/HBoxContainer/Edit
 @onready var enter_button: Button = $Container/HBoxContainer/Enter
+@onready var export_button: Button = $Container/HBoxContainer/Export
+@onready var save_button: Button = $Container/HBoxContainer/Save
+@onready var load_button: Button = $Container/HBoxContainer/Load
 
 
 func _ready():
-	file_dialog_button.pressed.connect(_on_file_dialog_button_pressed)
-	file_dialog.file_selected.connect(_on_file_dialog_file_selected)
-	
+	add_button.pressed.connect(_on_add_button_pressed)
 	delete_button.pressed.connect(_on_delete_button_pressed)
 	edit_button.pressed.connect(_on_edit_button_pressed)
 	enter_button.pressed.connect(_on_enter_button_pressed)
+	export_button.pressed.connect(_on_export_button_pressed)
+	save_button.pressed.connect(_on_save_button_pressed)
+	load_button.pressed.connect(_on_load_button_pressed)
+	
+	file_dialog.file_selected.connect(_on_file_dialog_file_selected)
+	file_dialog.dir_selected.connect(_on_file_dialog_dir_selected)
 	
 	Events.teleport_node_enter_requested.connect(_on_teleport_node_enter_requested)
 	Events.teleport_node_exit_requested.connect(_on_teleport_node_exit_requested)
@@ -54,6 +62,9 @@ func _process(delta):
 	
 	# Connection list rendering
 	connection_list.visible = authoring.in_edit_node_mode
+	
+	# Node viewer actions rendering
+#	if authoring.in_edit_node_mode: blablabla
 
 
 func update_connection_list(node: TeleportNode):
@@ -114,16 +125,25 @@ func get_focused_connection_entry():
 	return null
 
 
-func _on_file_dialog_button_pressed():
+func _on_add_button_pressed():
+	file_dialog.file_mode = FileDialog.FILE_MODE_OPEN_FILE
+	file_dialog.current_dir = ProjectSettings.globalize_path("res://")
 	file_dialog.show()
 
 
 func _on_file_dialog_file_selected(path: String):
 	var teleport_node: TeleportNode = load("res://src/TeleportNode.tscn").instantiate()
-	teleport_node.sprite_texture = load(path)
+	
+	teleport_node.sprite_texture_filename = path
+	
 	teleport_node.area_name = path.get_file()
 	
-	Events.emit_signal("teleport_node_add_requested", teleport_node)
+	Events.teleport_node_add_requested.emit(teleport_node)
+
+
+func _on_file_dialog_dir_selected(path: String):
+	project_title.text = path.get_file()
+	Events.load_requested.emit(path)
 
 
 func _on_delete_button_pressed():
@@ -149,6 +169,23 @@ func _on_enter_button_pressed():
 		Events.teleport_node_exit_requested.emit(selected_child)
 	else:
 		Events.teleport_node_enter_requested.emit(selected_child)
+
+
+func _on_export_button_pressed():
+	Events.export_requested.emit()
+
+
+func _on_save_button_pressed():
+	save_button.text = "..."
+	Events.save_requested.emit()
+	await Signal(Events.save_finished)
+	save_button.text = "SAVE"
+
+
+func _on_load_button_pressed():
+	file_dialog.file_mode = FileDialog.FILE_MODE_OPEN_DIR
+	file_dialog.current_dir = ProjectSettings.globalize_path("user://")
+	file_dialog.show()
 
 
 func _on_teleport_node_enter_requested(node: TeleportNode):
