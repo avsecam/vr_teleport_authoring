@@ -6,7 +6,7 @@
 [ext_resource type="Script" path="res://src/UI.gd" id="2_edhfa"]
 [ext_resource type="Script" path="res://src/Camera.gd" id="2_kdwmv"]
 [ext_resource type="PackedScene" uid="uid://c6217bo4dts2i" path="res://src/Teleporter.tscn" id="3_ajf81"]
-[ext_resource type="PackedScene" uid="uid://dwrrbgry634tu" path="res://src/TeleportNode.tscn" id="5_211ej"]
+[ext_resource type="PackedScene" uid="uid://dwrrbgry634tu" path="res://src/TeleportNode.tscn" id="5_2l1dg"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_82jvv"]
 albedo_texture = ExtResource("1_uli44")
@@ -55,15 +55,19 @@ omni_attenuation = 1e-05
 [node name="TeleportNodes" type="Node2D" parent="."]
 unique_name_in_owner = true
 
-[node name="TeleportNode" parent="TeleportNodes" instance=ExtResource("5_211ej")]
-position = Vector2(313, 331)
+[node name="TeleportNode2" parent="TeleportNodes" instance=ExtResource("5_2l1dg")]
+sprite_texture_filename = "res://assets/outside_0.jpg"
+area_name = "garden"
 
-[node name="TeleportNode2" parent="TeleportNodes" instance=ExtResource("5_211ej")]
-position = Vector2(594, 331)
-teleport_connections = [NodePath("../TeleportNode"), NodePath("../TeleportNode3")]
+[node name="TeleportNode3" parent="TeleportNodes" instance=ExtResource("5_2l1dg")]
+position = Vector2(218, -10)
+sprite_texture_filename = "res://assets/outside_1.jpg"
+area_name = "gate"
 
-[node name="TeleportNode3" parent="TeleportNodes" instance=ExtResource("5_211ej")]
-position = Vector2(968, 312)
+[node name="TeleportNode4" parent="TeleportNodes" instance=ExtResource("5_2l1dg")]
+position = Vector2(105, -162)
+sprite_texture_filename = "res://assets/outside_2.jpg"
+area_name = "outside"
 
 [node name="Camera2D" type="Camera2D" parent="."]
 unique_name_in_owner = true
