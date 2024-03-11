@@ -23,44 +23,47 @@ albedo_color = Color(1, 0.341176, 0.290196, 1)
 material = SubResource("StandardMaterial3D_gfaeb")
 height = 0.01
 
-[node name="TeleportAuthor" type="Node"]
+[node name="Main" type="Node"]
+
+[node name="TeleportAuthor" type="Node2D" parent="."]
+unique_name_in_owner = true
 script = ExtResource("1_vmn6e")
 
-[node name="NodeViewer" type="Node3D" parent="."]
+[node name="NodeViewer" type="Node3D" parent="TeleportAuthor"]
 unique_name_in_owner = true
 visible = false
 script = ExtResource("1_g7wbb")
 
-[node name="Bubble" type="MeshInstance3D" parent="NodeViewer"]
+[node name="Bubble" type="MeshInstance3D" parent="TeleportAuthor/NodeViewer"]
 mesh = SubResource("SphereMesh_7kg3k")
 
-[node name="Camera3D" type="Camera3D" parent="NodeViewer/Bubble"]
+[node name="Camera3D" type="Camera3D" parent="TeleportAuthor/NodeViewer/Bubble"]
 current = true
 
-[node name="TeleporterIndicatorAnchor" type="Node3D" parent="NodeViewer/Bubble/Camera3D"]
+[node name="TeleporterIndicatorAnchor" type="Node3D" parent="TeleportAuthor/NodeViewer/Bubble/Camera3D"]
 transform = Transform3D(1, 0, 0, 0, 0.986286, 0.165048, 0, -0.165048, 0.986286, 0, 0, 0)
 
-[node name="TeleporterIndicator" parent="NodeViewer/Bubble/Camera3D/TeleporterIndicatorAnchor" instance=ExtResource("3_ajf81")]
+[node name="TeleporterIndicator" parent="TeleportAuthor/NodeViewer/Bubble/Camera3D/TeleporterIndicatorAnchor" instance=ExtResource("3_ajf81")]
 
-[node name="MeshInstance3D" parent="NodeViewer/Bubble/Camera3D/TeleporterIndicatorAnchor/TeleporterIndicator/CollisionShape3D" index="0"]
+[node name="MeshInstance3D" parent="TeleportAuthor/NodeViewer/Bubble/Camera3D/TeleporterIndicatorAnchor/TeleporterIndicator/CollisionShape3D" index="0"]
 mesh = SubResource("CylinderMesh_4apla")
 
-[node name="OmniLight3D" type="OmniLight3D" parent="NodeViewer/Bubble"]
+[node name="OmniLight3D" type="OmniLight3D" parent="TeleportAuthor/NodeViewer/Bubble"]
 omni_range = 7.0
 omni_attenuation = 1e-05
 
-[node name="Teleporters" type="Node3D" parent="NodeViewer/Bubble"]
+[node name="Teleporters" type="Node3D" parent="TeleportAuthor/NodeViewer/Bubble"]
 
-[node name="TeleportNodes" type="Node2D" parent="."]
+[node name="TeleportNodes" type="Node2D" parent="TeleportAuthor"]
 unique_name_in_owner = true
 
-[node name="Camera2D" type="Camera2D" parent="."]
+[node name="Camera2D" type="Camera2D" parent="TeleportAuthor"]
 unique_name_in_owner = true
 script = ExtResource("2_kdwmv")
 
-[node name="CanvasLayer" type="CanvasLayer" parent="Camera2D"]
+[node name="CanvasLayer" type="CanvasLayer" parent="TeleportAuthor/Camera2D"]
 
-[node name="UI" type="Control" parent="Camera2D/CanvasLayer"]
+[node name="UI" type="Control" parent="TeleportAuthor/Camera2D/CanvasLayer"]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(1280, 720)
 layout_mode = 3
@@ -73,7 +76,7 @@ mouse_filter = 2
 script = ExtResource("2_edhfa")
 metadata/_edit_use_anchors_ = true
 
-[node name="TopUI" type="MarginContainer" parent="Camera2D/CanvasLayer/UI"]
+[node name="TopUI" type="MarginContainer" parent="TeleportAuthor/Camera2D/CanvasLayer/UI"]
 layout_mode = 1
 anchors_preset = 10
 anchor_right = 1.0
@@ -81,12 +84,12 @@ offset_bottom = 46.0
 grow_horizontal = 2
 theme_override_constants/margin_top = 20
 
-[node name="ProjectTitle" type="Label" parent="Camera2D/CanvasLayer/UI/TopUI"]
+[node name="ProjectTitle" type="Label" parent="TeleportAuthor/Camera2D/CanvasLayer/UI/TopUI"]
 layout_mode = 2
 text = "Untitled Project"
 horizontal_alignment = 1
 
-[node name="LeftUI" type="MarginContainer" parent="Camera2D/CanvasLayer/UI"]
+[node name="LeftUI" type="MarginContainer" parent="TeleportAuthor/Camera2D/CanvasLayer/UI"]
 layout_mode = 1
 anchors_preset = 9
 anchor_bottom = 1.0
@@ -98,20 +101,20 @@ theme_override_constants/margin_top = 20
 theme_override_constants/margin_right = 20
 theme_override_constants/margin_bottom = 20
 
-[node name="VBoxContainer" type="VBoxContainer" parent="Camera2D/CanvasLayer/UI/LeftUI"]
+[node name="VBoxContainer" type="VBoxContainer" parent="TeleportAuthor/Camera2D/CanvasLayer/UI/LeftUI"]
 layout_mode = 2
 
-[node name="Label" type="Label" parent="Camera2D/CanvasLayer/UI/LeftUI/VBoxContainer"]
+[node name="Label" type="Label" parent="TeleportAuthor/Camera2D/CanvasLayer/UI/LeftUI/VBoxContainer"]
 layout_mode = 2
 text = "WASD - move around
 Scroll - zoom
 Left Click - drag node
 Right Click - action"
 
-[node name="ConnectionList" type="VBoxContainer" parent="Camera2D/CanvasLayer/UI/LeftUI/VBoxContainer"]
+[node name="ConnectionList" type="VBoxContainer" parent="TeleportAuthor/Camera2D/CanvasLayer/UI/LeftUI/VBoxContainer"]
 layout_mode = 2
 
-[node name="FileDialog" type="FileDialog" parent="Camera2D/CanvasLayer/UI"]
+[node name="FileDialog" type="FileDialog" parent="TeleportAuthor/Camera2D/CanvasLayer/UI"]
 title = "Open a File"
 initial_position = 2
 size = Vector2i(975, 460)
@@ -120,7 +123,7 @@ file_mode = 0
 access = 2
 filters = PackedStringArray("*.png, *.jpg, *.jpeg")
 
-[node name="Container" type="MarginContainer" parent="Camera2D/CanvasLayer/UI"]
+[node name="Container" type="MarginContainer" parent="TeleportAuthor/Camera2D/CanvasLayer/UI"]
 layout_mode = 1
 anchors_preset = 12
 anchor_top = 1.0
@@ -134,103 +137,103 @@ theme_override_constants/margin_top = 30
 theme_override_constants/margin_right = 100
 theme_override_constants/margin_bottom = 30
 
-[node name="HBoxContainer" type="HBoxContainer" parent="Camera2D/CanvasLayer/UI/Container"]
+[node name="HBoxContainer" type="HBoxContainer" parent="TeleportAuthor/Camera2D/CanvasLayer/UI/Container"]
 layout_mode = 2
 theme_override_constants/separation = 15
 alignment = 1
 
-[node name="Add" type="Button" parent="Camera2D/CanvasLayer/UI/Container/HBoxContainer"]
+[node name="Add" type="Button" parent="TeleportAuthor/Camera2D/CanvasLayer/UI/Container/HBoxContainer"]
 custom_minimum_size = Vector2(100, 0)
 layout_mode = 2
 text = "ADD NODE"
 
-[node name="Delete" type="Button" parent="Camera2D/CanvasLayer/UI/Container/HBoxContainer"]
+[node name="Delete" type="Button" parent="TeleportAuthor/Camera2D/CanvasLayer/UI/Container/HBoxContainer"]
 custom_minimum_size = Vector2(100, 0)
 layout_mode = 2
 text = "DELETE NODE"
 
-[node name="Edit" type="Button" parent="Camera2D/CanvasLayer/UI/Container/HBoxContainer"]
+[node name="Edit" type="Button" parent="TeleportAuthor/Camera2D/CanvasLayer/UI/Container/HBoxContainer"]
 custom_minimum_size = Vector2(100, 0)
 layout_mode = 2
 text = "EDIT
 CONNECTIONS"
 
-[node name="Enter" type="Button" parent="Camera2D/CanvasLayer/UI/Container/HBoxContainer"]
+[node name="Enter" type="Button" parent="TeleportAuthor/Camera2D/CanvasLayer/UI/Container/HBoxContainer"]
 custom_minimum_size = Vector2(100, 0)
 layout_mode = 2
 text = "ENTER NODE"
 
-[node name="Legend" type="VBoxContainer" parent="Camera2D/CanvasLayer/UI/Container/HBoxContainer"]
+[node name="Legend" type="VBoxContainer" parent="TeleportAuthor/Camera2D/CanvasLayer/UI/Container/HBoxContainer"]
 layout_mode = 2
 alignment = 1
 
-[node name="HBoxContainer" type="HBoxContainer" parent="Camera2D/CanvasLayer/UI/Container/HBoxContainer/Legend"]
+[node name="HBoxContainer" type="HBoxContainer" parent="TeleportAuthor/Camera2D/CanvasLayer/UI/Container/HBoxContainer/Legend"]
 layout_mode = 2
 
-[node name="MarginContainer" type="MarginContainer" parent="Camera2D/CanvasLayer/UI/Container/HBoxContainer/Legend/HBoxContainer"]
+[node name="MarginContainer" type="MarginContainer" parent="TeleportAuthor/Camera2D/CanvasLayer/UI/Container/HBoxContainer/Legend/HBoxContainer"]
 layout_mode = 2
 theme_override_constants/margin_top = 10
 theme_override_constants/margin_bottom = 10
 
-[node name="ColorRect" type="ColorRect" parent="Camera2D/CanvasLayer/UI/Container/HBoxContainer/Legend/HBoxContainer/MarginContainer"]
+[node name="ColorRect" type="ColorRect" parent="TeleportAuthor/Camera2D/CanvasLayer/UI/Container/HBoxContainer/Legend/HBoxContainer/MarginContainer"]
 custom_minimum_size = Vector2(100, 0)
 layout_mode = 2
 color = Color(1, 1, 1, 0.588235)
 
-[node name="Label" type="Label" parent="Camera2D/CanvasLayer/UI/Container/HBoxContainer/Legend/HBoxContainer"]
+[node name="Label" type="Label" parent="TeleportAuthor/Camera2D/CanvasLayer/UI/Container/HBoxContainer/Legend/HBoxContainer"]
 layout_mode = 2
 theme_override_font_sizes/font_size = 0
 text = "INACTIVE"
 
-[node name="HBoxContainer2" type="HBoxContainer" parent="Camera2D/CanvasLayer/UI/Container/HBoxContainer/Legend"]
+[node name="HBoxContainer2" type="HBoxContainer" parent="TeleportAuthor/Camera2D/CanvasLayer/UI/Container/HBoxContainer/Legend"]
 layout_mode = 2
 
-[node name="MarginContainer" type="MarginContainer" parent="Camera2D/CanvasLayer/UI/Container/HBoxContainer/Legend/HBoxContainer2"]
+[node name="MarginContainer" type="MarginContainer" parent="TeleportAuthor/Camera2D/CanvasLayer/UI/Container/HBoxContainer/Legend/HBoxContainer2"]
 layout_mode = 2
 theme_override_constants/margin_top = 10
 theme_override_constants/margin_bottom = 10
 
-[node name="ColorRect" type="ColorRect" parent="Camera2D/CanvasLayer/UI/Container/HBoxContainer/Legend/HBoxContainer2/MarginContainer"]
+[node name="ColorRect" type="ColorRect" parent="TeleportAuthor/Camera2D/CanvasLayer/UI/Container/HBoxContainer/Legend/HBoxContainer2/MarginContainer"]
 custom_minimum_size = Vector2(100, 0)
 layout_mode = 2
 color = Color(1, 0, 0, 1)
 
-[node name="Label" type="Label" parent="Camera2D/CanvasLayer/UI/Container/HBoxContainer/Legend/HBoxContainer2"]
+[node name="Label" type="Label" parent="TeleportAuthor/Camera2D/CanvasLayer/UI/Container/HBoxContainer/Legend/HBoxContainer2"]
 layout_mode = 2
 theme_override_font_sizes/font_size = 0
 text = "NO TELEPORTER SET"
 
-[node name="HBoxContainer3" type="HBoxContainer" parent="Camera2D/CanvasLayer/UI/Container/HBoxContainer/Legend"]
+[node name="HBoxContainer3" type="HBoxContainer" parent="TeleportAuthor/Camera2D/CanvasLayer/UI/Container/HBoxContainer/Legend"]
 layout_mode = 2
 
-[node name="MarginContainer" type="MarginContainer" parent="Camera2D/CanvasLayer/UI/Container/HBoxContainer/Legend/HBoxContainer3"]
+[node name="MarginContainer" type="MarginContainer" parent="TeleportAuthor/Camera2D/CanvasLayer/UI/Container/HBoxContainer/Legend/HBoxContainer3"]
 layout_mode = 2
 theme_override_constants/margin_top = 10
 theme_override_constants/margin_bottom = 10
 
-[node name="ColorRect2" type="ColorRect" parent="Camera2D/CanvasLayer/UI/Container/HBoxContainer/Legend/HBoxContainer3/MarginContainer"]
+[node name="ColorRect2" type="ColorRect" parent="TeleportAuthor/Camera2D/CanvasLayer/UI/Container/HBoxContainer/Legend/HBoxContainer3/MarginContainer"]
 custom_minimum_size = Vector2(100, 0)
 layout_mode = 2
 color = Color(0, 0, 1, 1)
 
-[node name="Label" type="Label" parent="Camera2D/CanvasLayer/UI/Container/HBoxContainer/Legend/HBoxContainer3"]
+[node name="Label" type="Label" parent="TeleportAuthor/Camera2D/CanvasLayer/UI/Container/HBoxContainer/Legend/HBoxContainer3"]
 layout_mode = 2
 theme_override_font_sizes/font_size = 0
 text = "TELEPORTER SET"
 
-[node name="Export" type="Button" parent="Camera2D/CanvasLayer/UI/Container/HBoxContainer"]
+[node name="Export" type="Button" parent="TeleportAuthor/Camera2D/CanvasLayer/UI/Container/HBoxContainer"]
 custom_minimum_size = Vector2(100, 0)
 layout_mode = 2
 text = "EXPORT"
 
-[node name="Save" type="Button" parent="Camera2D/CanvasLayer/UI/Container/HBoxContainer"]
+[node name="Save" type="Button" parent="TeleportAuthor/Camera2D/CanvasLayer/UI/Container/HBoxContainer"]
 custom_minimum_size = Vector2(100, 0)
 layout_mode = 2
 text = "SAVE"
 
-[node name="Load" type="Button" parent="Camera2D/CanvasLayer/UI/Container/HBoxContainer"]
+[node name="Load" type="Button" parent="TeleportAuthor/Camera2D/CanvasLayer/UI/Container/HBoxContainer"]
 custom_minimum_size = Vector2(100, 0)
 layout_mode = 2
 text = "LOAD"
 
-[editable path="NodeViewer/Bubble/Camera3D/TeleporterIndicatorAnchor/TeleporterIndicator"]
+[editable path="TeleportAuthor/NodeViewer/Bubble/Camera3D/TeleporterIndicatorAnchor/TeleporterIndicator"]
