@@ -45,12 +45,7 @@ func _input_event(viewport, event, shape_idx):
 	if event.is_action_pressed("mouse_left"):
 		Events.teleport_node_drag_started.emit(self)
 	elif event.is_action_pressed("mouse_right"):
-		var handler: Node = self.get_parent().owner
-		if handler.in_edit_connections_mode:
-			if not handler.child_selected().get_path() == self.get_path():
-				Events.teleport_node_connection_add_requested.emit(handler.child_selected(), self)
-		else:
-			Events.teleport_node_selected.emit(self)
+		Events.teleport_node_selected.emit(self)
 		
 	elif event.is_action_released("mouse_left"):
 		can_drag = false

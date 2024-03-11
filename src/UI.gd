@@ -9,6 +9,7 @@ const connection_entry: PackedScene = preload("res://src/ConnectionEntry.tscn")
 
 @onready var file_dialog: FileDialog = $FileDialog
 
+@onready var authoring: TeleportAuthor = %TeleportAuthor
 @onready var add_button: Button = $Container/HBoxContainer/Add
 @onready var delete_button: Button = $Container/HBoxContainer/Delete
 @onready var edit_button: Button = $Container/HBoxContainer/Edit
@@ -39,7 +40,6 @@ func _ready():
 
 
 func _process(delta):
-	var authoring: TeleportAuthor = self.owner
 	
 	# Add button rendering
 	add_button.disabled = authoring.in_edit_node_mode or authoring.in_edit_connections_mode
@@ -147,12 +147,12 @@ func _on_file_dialog_dir_selected(path: String):
 
 
 func _on_delete_button_pressed():
-	var selected_child: TeleportNode = self.owner.child_selected()
+	var selected_child: TeleportNode = authoring.child_selected()
 	Events.teleport_node_delete_requested.emit(selected_child)
 
 
 func _on_edit_button_pressed():
-	var authoring: TeleportAuthor = self.owner
+	var authoring: TeleportAuthor = authoring
 	var selected_child: TeleportNode = authoring.child_selected()
 	
 	if authoring.in_edit_connections_mode:
@@ -162,7 +162,7 @@ func _on_edit_button_pressed():
 
 
 func _on_enter_button_pressed():
-	var authoring: TeleportAuthor = self.owner
+	var authoring: TeleportAuthor = authoring
 	var selected_child: TeleportNode = authoring.child_selected()
 	
 	if authoring.in_edit_node_mode:

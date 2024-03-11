@@ -4,9 +4,9 @@ extends Camera2D
 @export var move_speed: float = 2
 @export var zoom_speed: float = 0.05
 
+@onready var authoring: TeleportAuthor = %TeleportAuthor
 
 func _process(delta):
-	var authoring: TeleportAuthor = self.owner
 	if authoring.in_edit_node_mode:
 		return
 	

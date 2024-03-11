@@ -14,9 +14,10 @@ const teleporter_scene: PackedScene = preload("res://src/Teleporter.tscn")
 @onready var min_indicator_distance: float = 1 + (self.indicator.collision_shape.shape as CylinderShape3D).radius
 @onready var max_indicator_distance: float = (mesh.mesh as SphereMesh).radius - (self.indicator.collision_shape.shape as CylinderShape3D).radius
 
+@onready var authoring: TeleportAuthor = %TeleportAuthor
+
 @export var rotation_speed: float = 0.01
 @export var indicator_move_speed: float = 0.25
-
 
 var node: TeleportNode # Get/save all data from/to here
 
@@ -32,7 +33,6 @@ func _ready():
 
 
 func _process(_delta):
-	var authoring: TeleportAuthor = self.owner
 	
 	if not authoring.in_edit_node_mode:
 		return
@@ -104,7 +104,7 @@ func _on_teleport_node_enter_requested(node_to_enter: TeleportNode):
 	%"Camera2D".visible = false
 	self.visible = true
 	
-	self.owner.in_edit_node_mode = true
+	authoring.in_edit_node_mode = true
 
 
 func _on_teleport_node_exit_requested(node_to_exit: TeleportNode):
@@ -117,7 +117,7 @@ func _on_teleport_node_exit_requested(node_to_exit: TeleportNode):
 	
 	%"Camera2D".visible = true
 	self.visible = false
-	self.owner.in_edit_node_mode = false
+	authoring.in_edit_node_mode = false
 
 
 func _on_connection_entry_select_requested(entry: ConnectionEntry):

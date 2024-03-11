@@ -1,5 +1,5 @@
 class_name TeleportAuthor
-extends Node
+extends Node2D
 
 
 @onready var nodes: Node2D = $TeleportNodes
@@ -35,7 +35,8 @@ func child_selected():
 
 func _on_teleport_node_selected(node: TeleportNode):
 	if in_edit_connections_mode:
-		pass
+		if not self.child_selected().get_path() == node.get_path():
+			_on_teleport_node_connection_add_requested(node)
 	else:
 		if not node.selected:
 			for child in nodes.get_children():
@@ -83,7 +84,8 @@ func _on_teleport_node_edit_confirm_requested(_node: TeleportNode):
 	in_edit_connections_mode = false
 
 
-func _on_teleport_node_connection_add_requested(from: TeleportNode, to: TeleportNode):
+func _on_teleport_node_connection_add_requested(to: TeleportNode):
+	var from = self.child_selected()
 	var teleport_connections = from.teleport_connections
 	
 	for i in range(teleport_connections.size()):
