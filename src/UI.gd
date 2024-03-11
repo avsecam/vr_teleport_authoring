@@ -10,8 +10,8 @@ const connection_entry: PackedScene = preload("res://src/ConnectionEntry.tscn")
 @onready var file_dialog: FileDialog = $FileDialog
 
 @onready var authoring: TeleportAuthor = %TeleportAuthor
-@onready var add_button: Button = $Container/HBoxContainer/Add
-@onready var delete_button: Button = $Container/HBoxContainer/Delete
+@onready var add_button: Button = $Container/HBoxContainer/VBoxContainer/Add
+@onready var delete_button: Button = $Container/HBoxContainer/VBoxContainer/Delete
 @onready var edit_button: Button = $Container/HBoxContainer/Edit
 @onready var enter_button: Button = $Container/HBoxContainer/Enter
 @onready var export_button: Button = $Container/HBoxContainer/Export
