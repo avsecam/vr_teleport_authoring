@@ -8,3 +8,5 @@ EVENT MANAGEMENT
 add only triggers and flags???
 add items that change state when flag is changed
 	these may be tangible items or just scripts that can be attached to items when finally exported
+add new event bus class for handling user defined events?
+flags will get toggled on event emission
