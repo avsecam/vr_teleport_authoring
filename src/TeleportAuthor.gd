@@ -1,12 +1,10 @@
 class_name TeleportAuthor
 extends Node2D
 
-
 @onready var nodes: Node2D = $TeleportNodes
 
 var in_edit_connections_mode := false
 var in_edit_node_mode := false
-
 
 func _ready():
 	Events.teleport_node_selected.connect(_on_teleport_node_selected)
@@ -21,17 +19,14 @@ func _ready():
 	Events.save_requested.connect(_on_save_requested)
 	Events.load_requested.connect(_on_load_requested)
 
-
 func _process(_delta):
 	%TeleportNodes.visible = not in_edit_node_mode
-
 
 func child_selected():
 	for child in nodes.get_children():
 		if (child as TeleportNode).selected:
 			return child
 	return null
-
 
 func _on_teleport_node_selected(node: TeleportNode):
 	if in_edit_connections_mode:
@@ -46,7 +41,6 @@ func _on_teleport_node_selected(node: TeleportNode):
 		else:
 			node.selected = false
 
-
 func _on_teleport_node_drag_started(node: TeleportNode):
 	# Only allow one node to be dragged at any time
 	for child in nodes.get_children():
@@ -54,14 +48,12 @@ func _on_teleport_node_drag_started(node: TeleportNode):
 	
 	node.can_drag = true
 
-
 func _on_teleport_node_add_requested(node: TeleportNode):
 	# Add node at center of screen
-	var node_position: Vector2 = %"Camera2D".position
+	var node_position: Vector2 = % "Camera2D".position
 	node.position = node_position
 	
 	nodes.add_child(node)
-
 
 func _on_teleport_node_delete_requested(node: TeleportNode):
 	# Delete connections from other nodes
@@ -75,14 +67,11 @@ func _on_teleport_node_delete_requested(node: TeleportNode):
 	
 	node.queue_free()
 
-
 func _on_teleport_node_edit_requested(_node: TeleportNode):
 	in_edit_connections_mode = true
 
-
 func _on_teleport_node_edit_confirm_requested(_node: TeleportNode):
 	in_edit_connections_mode = false
-
 
 func _on_teleport_node_connection_add_requested(to: TeleportNode):
 	var from = self.child_selected()
@@ -95,7 +84,6 @@ func _on_teleport_node_connection_add_requested(to: TeleportNode):
 			return
 	
 	from.add_teleport_connection(to)
-
 
 # TODO: Dont allow same named nodes
 func _on_export_requested():
@@ -132,11 +120,9 @@ func _on_export_requested():
 		
 		var file = FileAccess.open(filename, FileAccess.WRITE)
 		file.store_string(JSON.stringify(exported_tp_node))
-		
 	
 	# Open folder containing scenes
 	OS.shell_show_in_file_manager(ProjectSettings.globalize_path(full_dir_name))
-
 
 func _on_save_requested():
 	var folder_name: String = "saved_" + str(floor(Time.get_unix_time_from_system()))
@@ -177,7 +163,6 @@ func _on_save_requested():
 	OS.shell_show_in_file_manager(ProjectSettings.globalize_path(full_dir_name))
 	Events.save_finished.emit()
 
-
 func _on_load_requested(file_path: String):
 	# Clear TeleportNodes
 	for i in %TeleportNodes.get_child_count():
@@ -194,7 +179,7 @@ func _on_load_requested(file_path: String):
 			continue
 		var saved_teleport_node: SavedTeleportNode = ResourceLoader.load(file_path + "/" + file)
 		
-		var teleport_node: TeleportNode = preload("res://src/TeleportNode.tscn").instantiate()
+		var teleport_node: TeleportNode = preload ("res://src/TeleportNode.tscn").instantiate()
 		teleport_node.area_name = saved_teleport_node.area_name
 		teleport_node.sprite_texture_filename = saved_teleport_node.sprite_texture_filename
 		teleport_node.position = saved_teleport_node.overview_position
@@ -223,10 +208,9 @@ func _on_load_requested(file_path: String):
 		for j in saved_teleport_node.teleporters.size():
 			var teleporter: Dictionary = saved_teleport_node.teleporters[j]
 			
-			var new_teleporter: Teleporter = preload("res://src/Teleporter.tscn").instantiate()
+			var new_teleporter: Teleporter = preload ("res://src/Teleporter.tscn").instantiate()
 			new_teleporter.position = teleporter["position"]
 			new_teleporter.rotation = teleporter["rotation"]
 			new_teleporter.teleport_location = get_node(teleporter["to"])
 			
 			teleport_node.teleporters.append(new_teleporter)
-		

@@ -1,7 +1,6 @@
 class_name TeleportNode
 extends StaticBody2D
 
-
 @onready var connections: Node2D = $Connections
 @onready var sprite: Sprite2D = $Sprite2D
 @onready var line_edit: LineEdit = $LineEdit
@@ -19,7 +18,6 @@ var base_rotation: float # normal facing rotation when user enters the node
 var selected: bool = false
 var can_drag: bool = false
 
-
 func _ready():
 	line_edit.text_submitted.connect(_on_line_edit_text_submitted)
 	line_edit.text_changed.connect(_on_line_edit_text_changed)
@@ -29,7 +27,7 @@ func _ready():
 	var err = image.load(sprite_texture_filename)
 	if err != OK:
 		push_warning("Error loading image from ", sprite_texture_filename)
-		sprite.texture = preload("res://icon.svg")
+		sprite.texture = preload ("res://icon.svg")
 	else:
 		var texture = ImageTexture.create_from_image(image)
 		sprite.texture = texture
@@ -40,7 +38,6 @@ func _ready():
 	for i in range(teleport_connections.size()):
 		teleport_connections[i] = String(get_node(teleport_connections[i]).get_path())
 
-
 func _input_event(viewport, event, shape_idx):
 	if event.is_action_pressed("mouse_left"):
 		Events.teleport_node_drag_started.emit(self)
@@ -49,7 +46,6 @@ func _input_event(viewport, event, shape_idx):
 		
 	elif event.is_action_released("mouse_left"):
 		can_drag = false
-
 
 func _process(delta):
 	# Make number of lines equal the number of connections
@@ -95,14 +91,11 @@ func _process(delta):
 		
 		line.width = 4 if self.selected else 2
 
-
 func add_teleport_connection(node: TeleportNode):
 	teleport_connections.append(node.get_path())
 
-
 func _on_line_edit_text_changed(new_text: String):
 	area_name = new_text
-
 
 func _on_line_edit_text_submitted(new_text: String):
 	line_edit.release_focus()
