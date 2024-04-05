@@ -34,6 +34,7 @@ script = ExtResource("1_g7wbb")
 mesh = SubResource("SphereMesh_7kg3k")
 
 [node name="Camera3D" type="Camera3D" parent="NodeViewer/Bubble"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, -1, 0, 0, 0)
 current = true
 
 [node name="TeleporterIndicatorAnchor" type="Node3D" parent="NodeViewer/Bubble/Camera3D"]

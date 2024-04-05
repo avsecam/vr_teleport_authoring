@@ -34,10 +34,13 @@ func _process(_delta):
 	if not authoring.in_edit_node_mode:
 		return
 	
+	# Invert camera to compensate for inverted 360 image
+	camera.scale = Vector3(-1, 1, 1)
+	
 	if Input.is_action_pressed("ui_left"):
-		camera.rotate_y(rotation_speed)
+		camera.rotation.y -= rotation_speed
 	if Input.is_action_pressed("ui_right"):
-		camera.rotate_y( - rotation_speed)
+		camera.rotation.y += rotation_speed
 	if Input.is_action_pressed("ui_up"):
 		indicator_anchor.rotate_x(rotation_speed)
 	if Input.is_action_pressed("ui_down"):
