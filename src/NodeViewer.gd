@@ -84,7 +84,7 @@ func add_teleporter():
 	Events.teleporter_add_requested.emit(node, teleporter)
 
 func replace_base_rotation():
-	var view_rotation = camera.rotation_degrees.y
+	var view_rotation = camera.rotation.y
 	node.base_rotation = view_rotation
 	
 	print(view_rotation, " set as base rotation.")
@@ -92,6 +92,7 @@ func replace_base_rotation():
 func _on_teleport_node_enter_requested(node_to_enter: TeleportNode):
 	self.node = node_to_enter
 	self.mesh.mesh.material.albedo_texture = node_to_enter.sprite.texture
+	self.camera.rotation.y = node_to_enter.base_rotation
 	
 	# Load teleporters from TeleportNode
 	for i in node_to_enter.teleporters.size():
