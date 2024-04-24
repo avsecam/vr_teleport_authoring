@@ -4,7 +4,7 @@ const connection_entry: PackedScene = preload ("res://src/ConnectionEntry.tscn")
 
 @onready var project_title: Label = $TopUI/ProjectTitle
 
-@onready var connection_list: VBoxContainer = $LeftUI/VBoxContainer/ConnectionList
+@onready var entity_list: VBoxContainer = $LeftUI/VBoxContainer/EntityList
 
 @onready var file_dialog: FileDialog = $FileDialog
 
@@ -78,7 +78,7 @@ func _process(_delta):
 		enter_node_button.text = "CONFIRM" if teleport_author.in_edit_node_mode else "ENTER NODE"
 		
 		# Connection list rendering
-		connection_list.visible = teleport_author.in_edit_node_mode
+		entity_list.visible = teleport_author.in_edit_node_mode
 		
 		# Node viewer actions rendering
 	#	if teleport_author.in_edit_node_mode: blablabla
@@ -90,37 +90,40 @@ func _process(_delta):
 		for button: Button in get_tree().get_nodes_in_group("EventAuthorButtons"):
 			button.visible = true
 
-func update_connection_list(node: TeleportNode):
-	# Make number of connection entries equal the number of connections
-	var difference = connection_list.get_child_count() - node.teleport_connections.size()
-	if difference < 0:
-		# Increase amount connection entries
-		for i in range(abs(difference)):
-			connection_list.add_child(connection_entry.instantiate())
-	elif difference > 0:
-		# Decrease amount of connection entries
-		for i in range(abs(difference)):
-			var node_to_remove = connection_list.get_child(0)
-			connection_list.remove_child(node_to_remove)
-			node_to_remove.queue_free()
-	
-	# By now, the number of connection entries and teleport connections are equal
-	# Connect the entries to each teleport connection
-	if connection_list.get_child_count() > 0:
-		for i in range(connection_list.get_child_count()):
-			var entry: ConnectionEntry = connection_list.get_child(i)
-			var connection: String = node.teleport_connections[i]
-			entry.connected_to = get_node(connection)
-			
-			for teleporter in node.teleporters:
-				if teleporter.teleport_location == get_node(connection):
-					entry.teleporter = teleporter
+func update_entity_list(node: TeleportNode):
+	if State.active_authoring == State.ActiveAuthoring.Teleport:
+		# Make number of connection entries equal the number of connections
+		var difference = entity_list.get_child_count() - node.teleport_connections.size()
+		if difference < 0:
+			# Increase amount connection entries
+			for i in range(abs(difference)):
+				entity_list.add_child(connection_entry.instantiate())
+		elif difference > 0:
+			# Decrease amount of connection entries
+			for i in range(abs(difference)):
+				var node_to_remove = entity_list.get_child(0)
+				entity_list.remove_child(node_to_remove)
+				node_to_remove.queue_free()
+		
+		# By now, the number of connection entries and teleport connections are equal
+		# Connect the entries to each teleport connection
+		if entity_list.get_child_count() > 0:
+			for i in range(entity_list.get_child_count()):
+				var entry: ConnectionEntry = entity_list.get_child(i)
+				var connection: String = node.teleport_connections[i]
+				entry.connected_to = get_node(connection)
+				
+				for teleporter in node.teleporters:
+					if teleporter.teleport_location == get_node(connection):
+						entry.teleporter = teleporter
+	else:
+		return
 
 func focus_default_connection_entry():
-	if connection_list.get_child_count() > 0:
+	if entity_list.get_child_count() > 0:
 		# Focus first entry that has no teleporter
 		var entry_without_teleporter: ConnectionEntry
-		for connection in connection_list.get_children():
+		for connection in entity_list.get_children():
 			if not (connection as ConnectionEntry).teleporter:
 				entry_without_teleporter = connection
 				break
@@ -128,17 +131,17 @@ func focus_default_connection_entry():
 		if entry_without_teleporter:
 			focus_connection_entry(entry_without_teleporter)
 		else:
-			focus_connection_entry(connection_list.get_child(0))
+			focus_connection_entry(entity_list.get_child(0))
 
 func focus_connection_entry(entry: ConnectionEntry):
-	for connection in connection_list.get_children():
+	for connection in entity_list.get_children():
 		connection.focused = false
 	
-	var entry_to_focus: ConnectionEntry = connection_list.get_child(connection_list.get_children().find(entry))
+	var entry_to_focus: ConnectionEntry = entity_list.get_child(entity_list.get_children().find(entry))
 	entry_to_focus.focused = true
 
 func get_focused_connection_entry():
-	for connection in connection_list.get_children():
+	for connection in entity_list.get_children():
 		if connection.focused:
 			return connection
 	
@@ -146,7 +149,7 @@ func get_focused_connection_entry():
 
 func _on_add_node_button_pressed():
 	file_dialog.file_mode = FileDialog.FILE_MODE_OPEN_FILE
-	file_dialog.current_dir = ProjectSettings.globalize_path("res://")
+	file_dialog.current_dir = ProjectSettings.globalize_path("C:/Users/VAMR/Downloads/drive-download-20240411T035525Z-001")
 	file_dialog.show()
 
 func _on_file_dialog_file_selected(path: String):
@@ -200,15 +203,15 @@ func _on_load_button_pressed():
 	file_dialog.show()
 
 func _on_teleport_node_enter_requested(node: TeleportNode):
-	update_connection_list(node)
+	update_entity_list(node)
 	focus_default_connection_entry()
-	connection_list.visible = true
+	entity_list.visible = true
 
 func _on_teleport_node_exit_requested(_node):
-	for child in connection_list.get_children():
+	for child in entity_list.get_children():
 		child.queue_free()
 	
-	connection_list.visible = false
+	entity_list.visible = false
 
 func _on_teleporter_add_requested(node: TeleportNode, teleporter: Teleporter):
 	var focused_entry: ConnectionEntry = get_focused_connection_entry()
@@ -216,7 +219,7 @@ func _on_teleporter_add_requested(node: TeleportNode, teleporter: Teleporter):
 	focused_entry.teleporter = teleporter
 	focused_entry.teleporter.teleport_location = focused_entry.connected_to
 	
-	update_connection_list(node)
+	update_entity_list(node)
 	focus_default_connection_entry()
 
 func _on_connection_entry_select_requested(entry: ConnectionEntry):

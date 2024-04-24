@@ -115,7 +115,7 @@ Scroll - zoom
 Left Click - drag node
 Right Click - action"
 
-[node name="ConnectionList" type="VBoxContainer" parent="Camera2D/CanvasLayer/TeleportAuthorUI/LeftUI/VBoxContainer"]
+[node name="EntityList" type="VBoxContainer" parent="Camera2D/CanvasLayer/TeleportAuthorUI/LeftUI/VBoxContainer"]
 layout_mode = 2
 
 [node name="FileDialog" type="FileDialog" parent="Camera2D/CanvasLayer/TeleportAuthorUI"]
