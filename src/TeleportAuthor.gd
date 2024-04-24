@@ -202,7 +202,10 @@ func _on_load_requested(file_path: String):
 		for j in saved_teleport_node.teleport_connections_node_paths.size():
 			var connection: NodePath = saved_teleport_node.teleport_connections_node_paths[j]
 			
-			teleport_node.teleport_connections.append(connection)
+			# Needed because names like @StaticBody2D@96 get turned into _StaticBody2D_96
+			var connection_formatted: NodePath = str(connection).replace("@", "_")
+			
+			teleport_node.teleport_connections.append(connection_formatted)
 		
 		# Load teleporters
 		for j in saved_teleport_node.teleporters.size():
