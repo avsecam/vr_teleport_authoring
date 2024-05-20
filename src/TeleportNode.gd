@@ -18,6 +18,9 @@ var base_rotation: float # normal facing rotation when user enters the node
 var selected: bool = false
 var can_drag: bool = false
 
+# height is 1/2 of this
+var texture_width: int
+
 func _ready():
 	line_edit.text_submitted.connect(_on_line_edit_text_submitted)
 	line_edit.text_changed.connect(_on_line_edit_text_changed)
@@ -30,6 +33,7 @@ func _ready():
 		sprite.texture = preload ("res://icon.svg")
 	else:
 		var texture = ImageTexture.create_from_image(image)
+		texture_width = texture.get_size().x
 		sprite.texture = texture
 	
 	line_edit.text = area_name
@@ -46,6 +50,10 @@ func _input_event(viewport, event, shape_idx):
 		
 	elif event.is_action_released("mouse_left"):
 		can_drag = false
+
+func _draw():
+	sprite.draw_texture_rect_region(sprite.texture, Rect2(0, 0, 100, 100), \
+		Rect2(texture_width/4, texture_width/8, texture_width/8, texture_width/8))
 
 func _process(delta):
 	# Make number of lines equal the number of connections
