@@ -158,8 +158,10 @@ func _on_file_dialog_file_selected(path: String):
 	teleport_node.sprite_texture_filename = path
 	
 	teleport_node.area_name = path.get_file()
-	
-	Events.teleport_node_add_requested.emit(teleport_node)
+
+	var teleport_node_internal_filename = path.get_file().to_lower()
+	var teleport_node_internal_name = teleport_node_internal_filename.get_slice("/", path.get_slice_count("/") - 1).replace(" ", "_")
+	Events.teleport_node_add_requested.emit(teleport_node, teleport_node_internal_name)
 
 func _on_file_dialog_dir_selected(path: String):
 	project_title.text = path.get_file()

@@ -48,11 +48,11 @@ func _on_teleport_node_drag_started(node: TeleportNode):
 	
 	node.can_drag = true
 
-func _on_teleport_node_add_requested(node: TeleportNode):
+func _on_teleport_node_add_requested(node: TeleportNode, internal_name: String):
 	# Add node at center of screen
 	var node_position: Vector2 = % "Camera2D".position
 	node.position = node_position
-	
+	node.name = internal_name
 	nodes.add_child(node)
 
 func _on_teleport_node_delete_requested(node: TeleportNode):
@@ -155,7 +155,7 @@ func _on_save_requested():
 			saved_teleport_node.teleporters.append({
 				"position": teleporter.position,
 				"rotation": teleporter.rotation,
-				"to": teleporter.teleport_location.get_path()
+				"to": teleporter.teleport_location.get_path() if teleporter.teleport_location else ""
 			})
 		
 		ResourceSaver.save(saved_teleport_node, full_dir_name + saved_teleport_node.area_name + ".tres")
