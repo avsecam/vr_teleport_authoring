@@ -112,9 +112,12 @@ func _on_export_requested():
 		for j in node.teleporters.size():
 			var teleporter: Teleporter = node.teleporters[j]
 			(exported_tp_node.teleporter_positions as Array).append({
-				"position_x": teleporter.position.x,
+				"position_x": -teleporter.position.x,
 				"position_y": teleporter.position.y,
 				"position_z": teleporter.position.z,
+				"rotation_x": teleporter.rotation.x,
+				"rotation_y": teleporter.rotation.y,
+				"rotation_z": teleporter.rotation.z,
 				"teleport_location_filename": teleporter.teleport_location.area_name.to_pascal_case() + ".json"
 			})
 		
