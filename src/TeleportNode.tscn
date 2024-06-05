@@ -9,7 +9,9 @@ size = Vector2(100, 100)
 [node name="TeleportNode2" type="StaticBody2D"]
 input_pickable = true
 script = ExtResource("1_5bw6n")
+sprite_texture_filename = null
 area_name = "outside_1.jpg"
+teleport_connections = null
 
 [node name="Connections" type="Node2D" parent="."]
 
@@ -34,9 +36,10 @@ flat = true
 
 [node name="ColorRect" type="ColorRect" parent="."]
 visible = false
-offset_left = 1.0
-offset_top = -1.0
-offset_right = 37.0
-offset_bottom = 31.0
+z_index = -1
+offset_left = -52.0
+offset_top = -52.0
+offset_right = 52.0
+offset_bottom = 52.0
 mouse_filter = 1
 color = Color(0, 0.694118, 0.698039, 1)
