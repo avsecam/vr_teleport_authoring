@@ -180,7 +180,10 @@ func _on_load_requested(file_path: String):
 		var file: String = files[i]
 		if file.get_extension() != "tres":
 			continue
-		var saved_teleport_node: SavedTeleportNode = ResourceLoader.load(file_path + "/" + file)
+		
+		var absolute_file_path = file_path + "/" + file
+		ResourceLoader.load_threaded_request(absolute_file_path)
+		var saved_teleport_node: SavedTeleportNode = ResourceLoader.load_threaded_get(absolute_file_path)
 		
 		var teleport_node: TeleportNode = preload ("res://src/TeleportNode.tscn").instantiate()
 		teleport_node.area_name = saved_teleport_node.area_name
