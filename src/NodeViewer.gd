@@ -92,13 +92,13 @@ func replace_base_rotation():
 func _on_teleport_node_enter_requested(node_to_enter: TeleportNode):
 	self.node = node_to_enter
 	self.mesh.mesh.material.albedo_texture = node_to_enter.sprite.texture
+	self.camera.current = true
 	self.camera.rotation.y = node_to_enter.base_rotation
 	
 	# Load teleporters from TeleportNode
 	for i in node_to_enter.teleporters.size():
 		teleporters.add_child(node_to_enter.teleporters[i])
 	
-	% "Camera2D".visible = false
 	self.visible = true
 	
 	authoring.in_edit_node_mode = true
@@ -111,7 +111,6 @@ func _on_teleport_node_exit_requested(node_to_exit: TeleportNode):
 		var teleporter = teleporters.get_child(0)
 		teleporters.remove_child(teleporter)
 	
-	% "Camera2D".visible = true
 	self.visible = false
 	authoring.in_edit_node_mode = false
 

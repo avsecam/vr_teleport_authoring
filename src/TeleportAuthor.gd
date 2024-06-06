@@ -15,13 +15,17 @@ func _ready():
 	Events.teleport_node_edit_confirm_requested.connect(_on_teleport_node_edit_confirm_requested)
 	Events.teleport_node_connection_add_requested.connect(_on_teleport_node_connection_add_requested)
 	
+	Events.teleport_node_enter_requested.connect(_on_teleport_node_enter_requested)
+	Events.teleport_node_exit_requested.connect(_on_teleport_node_exit_requested)
+	
+	Events.demo_requested.connect(_on_demo_requested)
+	Events.demo_exit_requested.connect(_on_demo_exit_requested)
+	
 	Events.export_requested.connect(_on_export_requested)
 	Events.save_requested.connect(_on_save_requested)
 	Events.load_requested.connect(_on_load_requested)
 
-func _process(_delta):
-	%TeleportNodes.visible = not in_edit_node_mode
-
+# Get the current selected TeleportNode
 func child_selected():
 	for child in nodes.get_children():
 		if (child as TeleportNode).selected:
@@ -84,6 +88,18 @@ func _on_teleport_node_connection_add_requested(to: TeleportNode):
 			return
 	
 	from.add_teleport_connection(to)
+
+func _on_teleport_node_enter_requested(_a):
+	self.visible = false	
+
+func _on_teleport_node_exit_requested(_a):
+	self.visible = true
+
+func _on_demo_requested(_a):
+	self.visible = false
+
+func _on_demo_exit_requested():
+	self.visible = true
 
 # TODO: Dont allow same named nodes
 func _on_export_requested():
@@ -155,11 +171,12 @@ func _on_save_requested():
 		for j in teleport_node.teleporters.size():
 			var teleporter: Teleporter = teleport_node.teleporters[j]
 
-			saved_teleport_node.teleporters.append({
-				"position": teleporter.position,
-				"rotation": teleporter.rotation,
-				"to": teleporter.teleport_location.get_path() if teleporter.teleport_location else ""
-			})
+			if is_instance_valid(teleporter.teleport_location):
+				saved_teleport_node.teleporters.append({
+					"position": teleporter.position,
+					"rotation": teleporter.rotation,
+					"to": teleporter.teleport_location.get_path() if teleporter.teleport_location else ""
+				})
 		
 		ResourceSaver.save(saved_teleport_node, full_dir_name + saved_teleport_node.area_name + ".tres")
 	
@@ -198,9 +215,12 @@ func _on_load_requested(file_path: String):
 	# Add connections and teleporters
 	for i in files.size():
 		var file: String = files[i]
-		var saved_teleport_node: SavedTeleportNode = ResourceLoader.load(file_path + "/" + file)
 		if file.get_extension() != "tres":
 			continue
+		
+		var absolute_file_path = file_path + "/" + file
+		ResourceLoader.load_threaded_request(absolute_file_path)
+		var saved_teleport_node: SavedTeleportNode = ResourceLoader.load_threaded_get(absolute_file_path)
 		
 		var teleport_node: TeleportNode = %TeleportNodes.get_child(i)
 		
