@@ -1,6 +1,7 @@
-[gd_scene load_steps=11 format=3 uid="uid://bhvtms0c52igc"]
+[gd_scene load_steps=12 format=3 uid="uid://bhvtms0c52igc"]
 
 [ext_resource type="Script" path="res://src/NodeViewer.gd" id="1_g7wbb"]
+[ext_resource type="Script" path="res://src/DemoViewer.gd" id="1_o5ptc"]
 [ext_resource type="Texture2D" uid="uid://dq7u67nfmm3a7" path="res://assets/outside_0.jpg" id="1_uli44"]
 [ext_resource type="Script" path="res://src/TeleportAuthor.gd" id="1_vmn6e"]
 [ext_resource type="Script" path="res://src/UI.gd" id="2_edhfa"]
@@ -24,6 +25,24 @@ material = SubResource("StandardMaterial3D_gfaeb")
 height = 0.01
 
 [node name="Main" type="Node"]
+
+[node name="DemoViewer" type="Node3D" parent="."]
+unique_name_in_owner = true
+visible = false
+script = ExtResource("1_o5ptc")
+
+[node name="Bubble" type="MeshInstance3D" parent="DemoViewer"]
+mesh = SubResource("SphereMesh_7kg3k")
+
+[node name="Camera3D" type="Camera3D" parent="DemoViewer/Bubble"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, -1, 0, 0, 0)
+current = true
+
+[node name="OmniLight3D" type="OmniLight3D" parent="DemoViewer/Bubble"]
+omni_range = 7.0
+omni_attenuation = 1e-05
+
+[node name="Teleporters" type="Node3D" parent="DemoViewer/Bubble"]
 
 [node name="NodeViewer" type="Node3D" parent="."]
 unique_name_in_owner = true
@@ -88,10 +107,20 @@ offset_bottom = 46.0
 grow_horizontal = 2
 theme_override_constants/margin_top = 20
 
-[node name="ProjectTitle" type="Label" parent="Camera2D/CanvasLayer/TeleportAuthorUI/TopUI"]
+[node name="CenterContainer" type="CenterContainer" parent="Camera2D/CanvasLayer/TeleportAuthorUI/TopUI"]
+layout_mode = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Camera2D/CanvasLayer/TeleportAuthorUI/TopUI/CenterContainer"]
+layout_mode = 2
+
+[node name="ProjectTitle" type="Label" parent="Camera2D/CanvasLayer/TeleportAuthorUI/TopUI/CenterContainer/VBoxContainer"]
 layout_mode = 2
 text = "Untitled Project"
 horizontal_alignment = 1
+
+[node name="Demo" type="Button" parent="Camera2D/CanvasLayer/TeleportAuthorUI/TopUI/CenterContainer/VBoxContainer"]
+layout_mode = 2
+text = "DEMO"
 
 [node name="LeftUI" type="MarginContainer" parent="Camera2D/CanvasLayer/TeleportAuthorUI"]
 layout_mode = 1

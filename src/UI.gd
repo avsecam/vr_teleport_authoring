@@ -2,7 +2,8 @@ extends Control
 
 const connection_entry: PackedScene = preload ("res://src/ConnectionEntry.tscn")
 
-@onready var project_title: Label = $TopUI/ProjectTitle
+@onready var project_title: Label = $TopUI/CenterContainer/VBoxContainer/ProjectTitle
+@onready var demo_button: Button = $TopUI/CenterContainer/VBoxContainer/Demo
 
 @onready var entity_list: VBoxContainer = $LeftUI/VBoxContainer/EntityList
 
@@ -34,6 +35,7 @@ func _ready():
 	# Event Author buttons
 	
 	# Common buttons
+	demo_button.pressed.connect(_on_demo_button_pressed)
 	switch_button.pressed.connect(_on_switch_button_pressed)
 	
 	export_button.pressed.connect(_on_export_button_pressed)
@@ -51,6 +53,9 @@ func _ready():
 	Events.connection_entry_delete_requested.connect(_on_connection_entry_delete_requested)
 
 func _process(_delta):
+	$Container.visible = true
+	$LeftUI.visible = true
+	
 	if State.active_authoring == State.ActiveAuthoring.Teleport:
 		# Hide Event Author buttons
 		for button: Button in get_tree().get_nodes_in_group("EventAuthorButtons"):
@@ -83,12 +88,16 @@ func _process(_delta):
 		# Node viewer actions rendering
 	#	if teleport_author.in_edit_node_mode: blablabla
 	
-	else:
+	elif State.active_authoring == State.ActiveAuthoring.Event:
 		# Hide Teleport Author buttons
 		for button: Button in get_tree().get_nodes_in_group("TeleportAuthorButtons"):
 			button.visible = false
 		for button: Button in get_tree().get_nodes_in_group("EventAuthorButtons"):
 			button.visible = true
+	
+	elif State.active_authoring == State.ActiveAuthoring.Demo:
+		$Container.visible = false
+		$LeftUI.visible = false
 
 func update_entity_list(node: TeleportNode):
 	if State.active_authoring == State.ActiveAuthoring.Teleport:
@@ -178,6 +187,17 @@ func _on_edit_connections_button_pressed():
 		Events.teleport_node_edit_confirm_requested.emit(selected_child)
 	else:
 		Events.teleport_node_edit_requested.emit(selected_child)
+
+func _on_demo_button_pressed():
+	if State.active_authoring == State.ActiveAuthoring.Demo:
+		Events.demo_exit_requested.emit()
+		return
+	
+	var start_node: TeleportNode = teleport_author.child_selected()
+	if not start_node:
+		push_error("No teleport node selected.")
+		return
+	Events.demo_requested.emit(start_node)
 
 func _on_switch_button_pressed():
 	Events.switch_requested.emit()
