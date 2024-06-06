@@ -18,6 +18,10 @@ signal connection_entry_delete_requested(entry: ConnectionEntry)
 
 # Event Author
 
+# Demo
+signal demo_requested(start_node: TeleportNode)
+signal demo_exit_requested()
+
 # Common
 signal switch_requested()
 
