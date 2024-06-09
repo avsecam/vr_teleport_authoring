@@ -17,6 +17,13 @@ signal connection_entry_select_requested(entry: ConnectionEntry)
 signal connection_entry_delete_requested(entry: ConnectionEntry)
 
 # Event Author
+signal event_flags_toggle_requested()
+
+signal trigger_add_requested(trigger_name: String)
+signal trigger_delete_requested(trigger_name: String)
+signal trigger_delete_confirmed(trigger_name: String)
+signal trigger_toggle_requested(trigger_name: String)
+signal trigger_set_requested(trigger_name: String, value: bool)
 
 # Demo
 signal demo_requested(start_node: TeleportNode)
