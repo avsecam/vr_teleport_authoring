@@ -180,6 +180,9 @@ func _on_save_requested():
 		
 		ResourceSaver.save(saved_teleport_node, full_dir_name + saved_teleport_node.area_name + ".tres")
 	
+	var event_flags_save = FileAccess.open(full_dir_name + "flags.json", FileAccess.WRITE)
+	event_flags_save.store_string(JSON.stringify(EventFlags.data))
+	
 	OS.shell_show_in_file_manager(ProjectSettings.globalize_path(full_dir_name))
 	Events.save_finished.emit()
 
