@@ -12,8 +12,14 @@ func _ready():
 	$EventFlagsButton.pressed.connect(_on_EventFlagsButton_pressed)
 	Events.event_flags_toggle_requested.connect(_on_event_flags_toggle_requested)
 	
-	self.add_trigger_button.pressed.connect(_on_trigger_button_pressed)
+	self.add_trigger_button.pressed.connect(_on_add_trigger_button_pressed)
 	Events.trigger_delete_confirmed.connect(_on_trigger_delete_confirmed)
+
+func _process(_delta):
+	if not text_edit.text:
+		add_trigger_button.disabled = true
+	else:
+		add_trigger_button.disabled = false
 
 func _on_EventFlagsButton_pressed():
 	Events.event_flags_toggle_requested.emit()
@@ -27,12 +33,13 @@ func _on_event_flags_toggle_requested():
 		self.color = MODAL_COLOR
 	$MarginContainer.visible = not $MarginContainer.visible
 
-func _on_trigger_button_pressed():
+func _on_add_trigger_button_pressed():
 	var trigger_name = text_edit.text
 	
 	if EventFlags.exists(trigger_name):
 		push_warning("Trigger ", trigger_name, " already exists.")
 	else:
+		text_edit.text = ""
 		var entry: TriggerEntry = TRIGGER_ENTRY.instantiate()
 		entry.set_trigger_name(trigger_name)
 		
