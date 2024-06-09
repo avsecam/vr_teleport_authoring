@@ -23,10 +23,11 @@ func _process(_delta):
 	# Invert camera to compensate for inverted 360 image
 	camera.scale = Vector3(-1, 1, 1)
 	
-	if Input.is_action_pressed("ui_left"):
-		camera.rotation.y -= rotation_speed
-	if Input.is_action_pressed("ui_right"):
-		camera.rotation.y += rotation_speed
+	if not get_viewport().is_input_handled():
+		if Input.is_action_pressed("ui_left"):
+			camera.rotation.y -= rotation_speed
+		if Input.is_action_pressed("ui_right"):
+			camera.rotation.y += rotation_speed
 	
 	# Reset colors of Teleporters
 	for teleporter in teleporters.get_children():
