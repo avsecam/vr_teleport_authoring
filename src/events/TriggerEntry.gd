@@ -13,6 +13,10 @@ func set_trigger_name(new_name: String):
 
 func _on_StateButton_pressed():
 	Events.trigger_toggle_requested.emit(self.trigger_name)
+	if EventFlags.data[self.trigger_name]:
+		$StateButton.text = "FALSE"
+	else:
+		$StateButton.text = "TRUE"
 
 func _on_DeleteButton_pressed():
 	Events.trigger_delete_requested.emit(self.trigger_name)

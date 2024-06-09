@@ -14,10 +14,10 @@ text = "trigger_name"
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_stretch_ratio = 0.1
-text = "true"
+text = "TRUE"
 
 [node name="DeleteButton" type="Button" parent="."]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_stretch_ratio = 0.1
-text = "true"
+text = "DEL"
