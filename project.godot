@@ -19,6 +19,7 @@ config/icon="res://icon.svg"
 
 Events="*res://Events.gd"
 State="*res://State.gd"
+EventFlags="*res://EventFlags.gd"
 
 [display]
 
