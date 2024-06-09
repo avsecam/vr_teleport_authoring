@@ -29,6 +29,8 @@ signal trigger_set_requested(trigger_name: String, value: bool)
 signal demo_requested(start_node: TeleportNode)
 signal demo_exit_requested()
 
+signal teleport_requested(to: TeleportNode)
+
 # Common
 signal switch_requested()
 

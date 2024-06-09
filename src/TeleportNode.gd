@@ -92,8 +92,9 @@ func _process(delta):
 			# Check teleporters if there is a corresponding teleporter with
 			# a teleport_location that matches node
 			for teleporter in teleporters:
-				if (teleporter as Teleporter).teleport_location == get_node(node):
-					line.default_color = Color(0, 0, 1)
+				if is_instance_valid(teleporter):
+					if teleporter.teleport_location == get_node(node):
+						line.default_color = Color(0, 0, 1)
 		else:
 			line.default_color = Color(1, 1, 1, 0.5)
 		
