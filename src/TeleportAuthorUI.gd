@@ -32,8 +32,6 @@ func _ready():
 	edit_connections_button.pressed.connect(_on_edit_connections_button_pressed)
 	enter_node_button.pressed.connect(_on_enter_node_button_pressed)
 	
-	# Event Author buttons
-	
 	# Common buttons
 	demo_button.pressed.connect(_on_demo_button_pressed)
 	switch_button.pressed.connect(_on_switch_button_pressed)
