@@ -12,11 +12,21 @@ func _ready():
 func exists(trigger_name: String):
 	return data.has(trigger_name)
 
+func value(trigger_name: String):
+	return data.get(trigger_name)
+
+func _clean_name(trigger_name: String):
+	var ret = trigger_name.to_lower()
+	ret.replace(" ", "_")
+	return ret
+
 func _on_trigger_add_requested(trigger_name: String):
-	if self.exists(trigger_name):
-		push_warning("Trigger ", trigger_name, " already exists.")
-	data[trigger_name] = false
-	print_debug("Trigger ", trigger_name, " added.")
+	var actual_trigger_name = _clean_name(trigger_name)
+	if self.exists(actual_trigger_name):
+		push_warning("Trigger ", actual_trigger_name, " already exists.")
+	data[actual_trigger_name] = false
+	Events.trigger_add_confirmed.emit(actual_trigger_name)
+	print_debug("Trigger ", actual_trigger_name, " added.")
 
 func _on_trigger_delete_requested(trigger_name: String):
 	if not self.exists(trigger_name):
@@ -30,11 +40,11 @@ func _on_trigger_toggle_requested(trigger_name: String):
 		push_error("Trigger ", trigger_name, " does not exist.")
 		return
 	data[trigger_name] = not data[trigger_name]
-	print_debug("Trigger ", trigger_name, " toggled.")
+	print_debug("Trigger ", trigger_name, " toggled to ", data[trigger_name], ".")
 
-func _on_trigger_set_requested(trigger_name: String, value: bool):
+func _on_trigger_set_requested(trigger_name: String, val: bool):
 	if not self.exists(trigger_name):
 		push_error("Trigger ", trigger_name, " does not exist.")
 		return
-	data[trigger_name] = value
-	print_debug("Trigger ", trigger_name, " set to ", value, ".")
+	data[trigger_name] = val
+	print_debug("Trigger ", trigger_name, " set to ", val, ".")
