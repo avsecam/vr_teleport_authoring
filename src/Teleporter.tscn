@@ -5,11 +5,10 @@
 [sub_resource type="CylinderShape3D" id="CylinderShape3D_hkbpe"]
 height = 0.01
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_nv8fi"]
-albedo_color = Color(1, 0.466667, 1, 1)
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_sbijh"]
 
-[sub_resource type="CylinderMesh" id="CylinderMesh_7l22j"]
-material = SubResource("StandardMaterial3D_nv8fi")
+[sub_resource type="CylinderMesh" id="CylinderMesh_kmthg"]
+material = SubResource("StandardMaterial3D_sbijh")
 height = 0.01
 
 [node name="Teleporter" type="StaticBody3D"]
@@ -21,5 +20,5 @@ script = ExtResource("1_mn2lr")
 shape = SubResource("CylinderShape3D_hkbpe")
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="CollisionShape3D"]
-mesh = SubResource("CylinderMesh_7l22j")
+mesh = SubResource("CylinderMesh_kmthg")
 skeleton = NodePath("../../../..")

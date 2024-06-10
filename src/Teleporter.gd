@@ -6,11 +6,45 @@ extends StaticBody3D
 
 var teleport_location: TeleportNode
 
-# {name: bool}
-var locks: Array = []
+# name of key in EventFlags
+var locks: Array[String] = []
+
+# If Teleporter is locked
+var locked: bool
+
+func _ready():
+	mesh_instance.mesh.resource_local_to_scene = true
+	mesh_instance.mesh.material = StandardMaterial3D.new()
+
+func _process(_delta):
+	mesh_instance.mesh.material.albedo_color = Color("white")
+	
+	if State.active_authoring == State.ActiveAuthoring.Demo:
+		self.locked = false
+		# If NOT all locks are set to true, disable the Teleporter
+		for lock in locks:
+			if EventFlags.exists(lock):
+				if not EventFlags.value(lock):
+					self.locked = true
+					mesh_instance.mesh.material.albedo_color = Color(Color.DARK_SLATE_GRAY)
+				else:
+					continue
+			else:
+				push_warning("Lock ", lock, " does not exist in EventFlags.")
+				continue
 
 func set_hovered(value: bool):
+	if locked:
+		return
 	if value:
 		mesh_instance.mesh.material.albedo_color = Color("ff77ff")
 	else:
 		mesh_instance.mesh.material.albedo_color = Color("white")
+
+func toggle_lock(lock_name: String):
+	if not locks.has(lock_name):
+		locks.append(lock_name)
+		print_debug("Lock ", lock_name, " added.")
+	else:
+		locks.erase(lock_name)
+		print_debug("Lock ", lock_name, " removed.")
