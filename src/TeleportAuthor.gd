@@ -193,13 +193,24 @@ func _on_load_requested(file_path: String):
 		%TeleportNodes.remove_child(teleport_node)
 		teleport_node.queue_free()
 	
+	# Load flags
+	var flags_file = FileAccess.open(file_path + "/flags.json", FileAccess.READ)
+	var flags_json = JSON.parse_string(flags_file.get_as_text())
+	for key in (flags_json as Dictionary).keys():
+		Events.trigger_add_requested.emit(key)
+	
 	# Load TeleportNodes
 	var dir_access: DirAccess = DirAccess.open(file_path)
 	var files: PackedStringArray = dir_access.get_files()
+	var tres_files: PackedStringArray
+	
 	for i in files.size():
 		var file: String = files[i]
-		if file.get_extension() != "tres":
-			continue
+		if file.get_extension() == "tres":
+			tres_files.append(file)
+	
+	for i in tres_files.size():
+		var file: String = tres_files[i]
 		
 		var absolute_file_path = file_path + "/" + file
 		ResourceLoader.load_threaded_request(absolute_file_path)
@@ -216,8 +227,8 @@ func _on_load_requested(file_path: String):
 		%TeleportNodes.add_child(teleport_node)
 	
 	# Add connections and teleporters
-	for i in files.size():
-		var file: String = files[i]
+	for i in tres_files.size():
+		var file: String = tres_files[i]
 		if file.get_extension() != "tres":
 			continue
 		
