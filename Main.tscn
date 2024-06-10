@@ -99,6 +99,7 @@ grow_vertical = 2
 mouse_filter = 1
 script = ExtResource("2_edhfa")
 metadata/_edit_use_anchors_ = true
+metadata/_edit_lock_ = true
 
 [node name="TopUI" type="MarginContainer" parent="Camera2D/CanvasLayer/TeleportAuthorUI"]
 layout_mode = 1
@@ -127,9 +128,9 @@ text = "DEMO"
 layout_mode = 1
 anchors_preset = 9
 anchor_bottom = 1.0
-offset_top = 408.0
+offset_top = 2.0
 offset_right = 277.0
-offset_bottom = -120.0
+offset_bottom = -526.0
 grow_vertical = 2
 theme_override_constants/margin_left = 20
 theme_override_constants/margin_top = 20
@@ -299,18 +300,19 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
-color = Color(0, 0, 0, 0.121569)
+color = Color(0, 0, 0, 0)
 script = ExtResource("8_ebub3")
 metadata/_edit_use_anchors_ = true
+metadata/_edit_lock_ = true
 
 [node name="EventFlagsButton" type="Button" parent="Camera2D/CanvasLayer/EventFlagsUI"]
 layout_mode = 1
 anchors_preset = -1
 anchor_right = 0.241
 anchor_bottom = 0.153
-offset_left = 50.0
+offset_left = 890.0
 offset_top = 47.0
-offset_right = 74.52
+offset_right = 914.52
 offset_bottom = -32.16
 text = "EVENT FLAGS"
 
@@ -318,9 +320,9 @@ text = "EVENT FLAGS"
 visible = false
 layout_mode = 1
 anchors_preset = -1
-anchor_left = 0.062
+anchor_left = 0.34325
 anchor_top = 0.108
-anchor_right = 0.368469
+anchor_right = 0.649719
 anchor_bottom = 0.897
 offset_left = -0.360001
 offset_top = 0.239998
@@ -329,6 +331,7 @@ offset_bottom = 0.159973
 grow_horizontal = 2
 grow_vertical = 2
 metadata/_edit_use_anchors_ = true
+metadata/_edit_lock_ = true
 
 [node name="ColorRect" type="ColorRect" parent="Camera2D/CanvasLayer/EventFlagsUI/MarginContainer"]
 modulate = Color(0.231373, 0.231373, 0.231373, 1)
