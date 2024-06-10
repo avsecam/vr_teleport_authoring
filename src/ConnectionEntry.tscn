@@ -14,3 +14,7 @@ text = "Area Name"
 layout_mode = 2
 text = "Delete
 Teleporter"
+
+[node name="Locks" type="Button" parent="."]
+layout_mode = 2
+text = "Locks"
