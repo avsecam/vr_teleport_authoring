@@ -51,6 +51,7 @@ func _on_add_trigger_button_pressed():
 func _on_trigger_add_confirmed(trigger_name: String):
 	var entry: TriggerEntry = TRIGGER_ENTRY.instantiate()
 	entry.set_trigger_name(trigger_name)
+	entry.set_teleporter(teleporter)
 	trigger_list.add_child(entry)
 
 func _on_trigger_delete_confirmed(trigger_name: String):
