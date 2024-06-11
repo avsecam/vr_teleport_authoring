@@ -291,16 +291,16 @@ custom_minimum_size = Vector2(100, 0)
 layout_mode = 2
 text = "LOAD"
 
-[node name="EventFlagsUI" type="ColorRect" parent="Camera2D/CanvasLayer"]
+[node name="EventFlagsUI" type="Control" parent="Camera2D/CanvasLayer"]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(1280, 720)
+layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
-color = Color(0, 0, 0, 0)
 script = ExtResource("8_ebub3")
 metadata/_edit_use_anchors_ = true
 metadata/_edit_lock_ = true
@@ -315,60 +315,5 @@ offset_top = 47.0
 offset_right = 914.52
 offset_bottom = -32.16
 text = "EVENT FLAGS"
-
-[node name="MarginContainer" type="MarginContainer" parent="Camera2D/CanvasLayer/EventFlagsUI"]
-visible = false
-layout_mode = 1
-anchors_preset = -1
-anchor_left = 0.34325
-anchor_top = 0.108
-anchor_right = 0.649719
-anchor_bottom = 0.897
-offset_left = -0.360001
-offset_top = 0.239998
-offset_right = 0.359985
-offset_bottom = 0.159973
-grow_horizontal = 2
-grow_vertical = 2
-metadata/_edit_use_anchors_ = true
-metadata/_edit_lock_ = true
-
-[node name="ColorRect" type="ColorRect" parent="Camera2D/CanvasLayer/EventFlagsUI/MarginContainer"]
-modulate = Color(0.231373, 0.231373, 0.231373, 1)
-layout_mode = 2
-
-[node name="MarginContainer" type="MarginContainer" parent="Camera2D/CanvasLayer/EventFlagsUI/MarginContainer"]
-layout_mode = 2
-theme_override_constants/margin_left = 20
-theme_override_constants/margin_top = 20
-theme_override_constants/margin_right = 20
-theme_override_constants/margin_bottom = 20
-metadata/_edit_use_anchors_ = true
-
-[node name="VBoxContainer" type="VBoxContainer" parent="Camera2D/CanvasLayer/EventFlagsUI/MarginContainer/MarginContainer"]
-layout_mode = 2
-
-[node name="HBoxContainer" type="HBoxContainer" parent="Camera2D/CanvasLayer/EventFlagsUI/MarginContainer/MarginContainer/VBoxContainer"]
-layout_mode = 2
-size_flags_vertical = 3
-size_flags_stretch_ratio = 0.05
-
-[node name="TextEdit" type="TextEdit" parent="Camera2D/CanvasLayer/EventFlagsUI/MarginContainer/MarginContainer/VBoxContainer/HBoxContainer"]
-layout_mode = 2
-size_flags_horizontal = 3
-placeholder_text = "Add trigger"
-
-[node name="Button" type="Button" parent="Camera2D/CanvasLayer/EventFlagsUI/MarginContainer/MarginContainer/VBoxContainer/HBoxContainer"]
-layout_mode = 2
-size_flags_horizontal = 3
-size_flags_stretch_ratio = 0.1
-text = "ADD"
-
-[node name="HSeparator" type="HSeparator" parent="Camera2D/CanvasLayer/EventFlagsUI/MarginContainer/MarginContainer/VBoxContainer"]
-layout_mode = 2
-
-[node name="TriggerNames" type="VBoxContainer" parent="Camera2D/CanvasLayer/EventFlagsUI/MarginContainer/MarginContainer/VBoxContainer"]
-layout_mode = 2
-size_flags_vertical = 3
 
 [editable path="NodeViewer/Bubble/Camera3D/TeleporterIndicatorAnchor/TeleporterIndicator"]

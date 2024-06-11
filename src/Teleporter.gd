@@ -29,6 +29,7 @@ func _process(_delta):
 					mesh_instance.mesh.material.albedo_color = Color(Color.DARK_SLATE_GRAY)
 				else:
 					continue
+		# Ignore locks that don't exist in EventFlags
 			else:
 				push_warning("Lock ", lock, " does not exist in EventFlags.")
 				continue
@@ -44,7 +45,7 @@ func set_hovered(value: bool):
 func toggle_lock(lock_name: String):
 	if not locks.has(lock_name):
 		locks.append(lock_name)
-		print_debug("Lock ", lock_name, " added.")
+		print_debug("Lock ", lock_name, " added to teleporter to ", self.teleport_location.name, ".")
 	else:
 		locks.erase(lock_name)
-		print_debug("Lock ", lock_name, " removed.")
+		print_debug("Lock ", lock_name, " removed from teleporter to ", self.teleport_location.name, ".")
