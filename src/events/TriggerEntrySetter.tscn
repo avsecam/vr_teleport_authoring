@@ -17,8 +17,5 @@ size_flags_stretch_ratio = 0.1
 disabled = true
 text = "FALSE"
 
-[node name="ConnectButton" type="Button" parent="."]
+[node name="ConnectButton" type="CheckBox" parent="."]
 layout_mode = 2
-size_flags_horizontal = 3
-size_flags_stretch_ratio = 0.1
-text = "X"
