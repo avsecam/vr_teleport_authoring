@@ -15,6 +15,9 @@ func exists(trigger_name: String):
 func value(trigger_name: String):
 	return data.get(trigger_name)
 
+func clear():
+	data.clear()
+
 func _clean_name(trigger_name: String):
 	var ret = trigger_name.to_lower()
 	ret.replace(" ", "_")

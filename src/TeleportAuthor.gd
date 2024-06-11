@@ -193,7 +193,9 @@ func _on_load_requested(file_path: String):
 		%TeleportNodes.remove_child(teleport_node)
 		teleport_node.queue_free()
 	
-	# Load flags
+	# Clear and load flags
+	EventFlags.clear()
+	
 	var flags_file = FileAccess.open(file_path + "/flags.json", FileAccess.READ)
 	var flags_json = JSON.parse_string(flags_file.get_as_text())
 	for key in (flags_json as Dictionary).keys():
