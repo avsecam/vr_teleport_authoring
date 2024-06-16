@@ -160,6 +160,7 @@ func _on_save_requested():
 		saved_teleport_node.sprite_texture_filename = teleport_node.sprite_texture_filename
 		saved_teleport_node.node_path = teleport_node.get_path()
 		saved_teleport_node.overview_position = teleport_node.position
+		saved_teleport_node.base_rotation = teleport_node.base_rotation
 		
 		# Save connections
 		for j in teleport_node.teleport_connections.size():
@@ -197,9 +198,12 @@ func _on_load_requested(file_path: String):
 	EventFlags.clear()
 	
 	var flags_file = FileAccess.open(file_path + "/flags.json", FileAccess.READ)
-	var flags_json = JSON.parse_string(flags_file.get_as_text())
-	for key in (flags_json as Dictionary).keys():
-		Events.trigger_add_requested.emit(key)
+	if flags_file == null:
+		EventFlags.data = {}
+	else:
+		var flags_json = JSON.parse_string(flags_file.get_as_text())
+		for key in (flags_json as Dictionary).keys():
+			Events.trigger_add_requested.emit(key)
 	
 	# Load TeleportNodes
 	var dir_access: DirAccess = DirAccess.open(file_path)
@@ -222,6 +226,7 @@ func _on_load_requested(file_path: String):
 		teleport_node.area_name = saved_teleport_node.area_name
 		teleport_node.sprite_texture_filename = saved_teleport_node.sprite_texture_filename
 		teleport_node.position = saved_teleport_node.overview_position
+		teleport_node.base_rotation = saved_teleport_node.base_rotation
 		
 		var saved_teleport_node_node_path: NodePath = saved_teleport_node.node_path
 		teleport_node.name = saved_teleport_node_node_path.get_name(saved_teleport_node_node_path.get_name_count() - 1)

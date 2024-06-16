@@ -6,6 +6,7 @@ extends Resource
 @export var node_path: NodePath
 @export var area_name: String
 @export var sprite_texture_filename: String
+@export var base_rotation: float
 
 @export var overview_position: Vector2
 
