@@ -113,20 +113,28 @@ func _on_export_requested():
 	for i in nodes.get_child_count():
 		var node: TeleportNode = nodes.get_child(i)
 		var filename: String = full_dir_name + node.area_name.to_pascal_case() + ".json"
-		var image_filename: String = full_dir_name + node.area_name.to_pascal_case() + ".jpg"
 		
-		var image = Image.load_from_file(node.sprite_texture_filename)
-		image.save_jpg(image_filename)
+		var image_filename: String
+		var obj_filename: String
+		if node.mesh:
+			obj_filename = full_dir_name + node.mesh_filename
+			DirAccess.copy_absolute(node.mesh_filename, full_dir_name + node.area_name.to_pascal_case().get_file())
+		else:
+			image_filename = full_dir_name + node.area_name.to_pascal_case() + ".jpg"
+			var image = Image.load_from_file(node.sprite_texture_filename)
+			image.save_jpg(image_filename)
 		
 		var exported_tp_node = {
-			"panorama_texture_filename": node.area_name.to_pascal_case() + ".jpg",
+			"panorama_texture_filename": node.area_name.to_pascal_case() + ".jpg" if not node.mesh else "",
+			"mesh_filename": node.area_name.to_pascal_case() + ".obj" if node.mesh else "",
 			"area_name": node.area_name,
 			"base_rotation": node.base_rotation if node.base_rotation else float(0),
-			"teleporter_positions": [] # {position, teleport_location_filepath}
+			"teleporter_positions": [], # {position, teleport_location_filepath}
+			"teleport_spots": []
 		}
 		
 		for j in node.teleporters.size():
-			var teleporter: Teleporter = node.teleporters[j]
+			var teleporter: TeleporterOutsideConnection = node.teleporters[j]
 			(exported_tp_node.teleporter_positions as Array).append({
 				"position_x": -teleporter.position.x,
 				"position_y": teleporter.position.y,
@@ -136,6 +144,18 @@ func _on_export_requested():
 				"rotation_z": teleporter.rotation.z,
 				"teleport_location_filename": teleporter.teleport_location.area_name.to_pascal_case() + ".json"
 			})
+		
+		if node.mesh:
+			for j in node.teleporters.size():
+				var teleporter: Teleporter = node.teleporters[j]
+				(exported_tp_node.teleport_spots as Array).append({
+					"position_x": -teleporter.position.x,
+					"position_y": teleporter.position.y,
+					"position_z": teleporter.position.z,
+					"rotation_x": teleporter.rotation.x,
+					"rotation_y": teleporter.rotation.y,
+					"rotation_z": teleporter.rotation.z
+				})
 		
 		var file = FileAccess.open(filename, FileAccess.WRITE)
 		file.store_string(JSON.stringify(exported_tp_node))
@@ -160,7 +180,6 @@ func _on_save_requested():
 		
 		# prioritize 3D scenes
 		if teleport_node.mesh:
-			DirAccess.copy_absolute(teleport_node.mesh_filename, full_dir_name + (teleport_node.mesh_filename as String).get_file())
 			saved_teleport_node.obj_filename = teleport_node.mesh_filename
 		else:
 			saved_teleport_node.sprite_texture_filename = teleport_node.sprite_texture_filename
