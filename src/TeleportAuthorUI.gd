@@ -129,9 +129,7 @@ func update_entity_list(node: TeleportNode):
 							entry.teleporter = teleporter
 				else:
 					connection = (all_teleporters[i] as Teleporter).global_position
-					entry.label.text = str((all_teleporters[i] as Teleporter).global_position.x +
-						(all_teleporters[i] as Teleporter).global_position.y +
-						(all_teleporters[i] as Teleporter).global_position.z)
+					entry.label.text = str((all_teleporters[i] as Teleporter).global_position.round())
 					entry.teleporter = all_teleporters[i]
 				
 
