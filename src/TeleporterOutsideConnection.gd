@@ -1,0 +1,4 @@
+class_name TeleporterOutsideConnection
+extends Teleporter
+
+var teleport_location: TeleportNode
