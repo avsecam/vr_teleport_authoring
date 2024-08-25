@@ -11,7 +11,12 @@ extends StaticBody2D
 
 @export var teleport_connections: Array[NodePath] # of TeleportNode NodePaths
 
-var teleporters: Array[Teleporter]
+# Mesh of the 3D scene. Use this as a basis to check if the node is a 3D scene or not
+@export var mesh: Mesh
+
+var teleporters: Array[TeleporterOutsideConnection]
+# Array of teleporter poositions in a 3D scene that do not lead out of the node
+var teleport_spots: Array[Teleporter]
 
 var base_rotation: float # normal facing rotation when user enters the node
 
