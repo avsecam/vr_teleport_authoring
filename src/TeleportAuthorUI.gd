@@ -34,7 +34,6 @@ func _ready():
 	
 	# Common buttons
 	demo_button.pressed.connect(_on_demo_button_pressed)
-	switch_button.pressed.connect(_on_switch_button_pressed)
 	
 	export_button.pressed.connect(_on_export_button_pressed)
 	save_button.pressed.connect(_on_save_button_pressed)
@@ -99,8 +98,11 @@ func _process(_delta):
 
 func update_entity_list(node: TeleportNode):
 	if State.active_authoring == State.ActiveAuthoring.Teleport:
+		var all_teleporters = node.teleport_spots + node.teleport_connections
+		#all_teleporters.append_array(node.teleport_spots.duplicate())
+		print_debug(all_teleporters)
 		# Make number of connection entries equal the number of connections
-		var difference = entity_list.get_child_count() - node.teleport_connections.size()
+		var difference = entity_list.get_child_count() - all_teleporters.size()
 		if difference < 0:
 			# Increase amount connection entries
 			for i in range(abs(difference)):
@@ -117,14 +119,21 @@ func update_entity_list(node: TeleportNode):
 		if entity_list.get_child_count() > 0:
 			for i in range(entity_list.get_child_count()):
 				var entry: ConnectionEntry = entity_list.get_child(i)
-				var connection: String = node.teleport_connections[i]
-				entry.connected_to = get_node(connection)
 				
-				for teleporter in node.teleporters:
-					if teleporter.teleport_location == get_node(connection):
-						entry.teleporter = teleporter
-	else:
-		return
+				var connection
+				if all_teleporters[i] is NodePath:
+					connection = all_teleporters[i]
+					entry.connected_to = get_node(connection)
+					for teleporter in node.teleporters:
+						if teleporter.teleport_location == get_node(connection):
+							entry.teleporter = teleporter
+				else:
+					connection = (all_teleporters[i] as Teleporter).global_position
+					entry.label.text = str((all_teleporters[i] as Teleporter).global_position.x +
+						(all_teleporters[i] as Teleporter).global_position.y +
+						(all_teleporters[i] as Teleporter).global_position.z)
+					entry.teleporter = all_teleporters[i]
+				
 
 func focus_default_connection_entry():
 	if entity_list.get_child_count() > 0:
@@ -156,14 +165,20 @@ func get_focused_connection_entry():
 
 func _on_add_node_button_pressed():
 	file_dialog.file_mode = FileDialog.FILE_MODE_OPEN_FILE
-	file_dialog.current_dir = ProjectSettings.globalize_path("C:/Users/VAMR/Downloads/drive-download-20240411T035525Z-001")
+	#file_dialog.current_dir = ProjectSettings.globalize_path("C:/Users/VAMR/Downloads/drive-download-20240411T035525Z-001")
+	file_dialog.current_dir = ProjectSettings.globalize_path("res://")
 	file_dialog.show()
 
 func _on_file_dialog_file_selected(path: String):
 	var teleport_node: TeleportNode = load("res://src/TeleportNode.tscn").instantiate()
 	
-	teleport_node.sprite_texture_filename = path
+	var filetype = path.get_extension()
 	
+	if filetype == "jpg":
+		teleport_node.sprite_texture_filename = path
+	elif filetype == "obj":
+		(teleport_node.mesh) = load(path)
+		
 	teleport_node.area_name = path.get_file()
 
 	var teleport_node_internal_filename = path.get_file().to_lower()
@@ -234,10 +249,12 @@ func _on_teleport_node_exit_requested(_node):
 	entity_list.visible = false
 
 func _on_teleporter_add_requested(node: TeleportNode, teleporter: Teleporter):
-	var focused_entry: ConnectionEntry = get_focused_connection_entry()
-	
-	focused_entry.teleporter = teleporter
-	focused_entry.teleporter.teleport_location = focused_entry.connected_to
+	if teleporter is TeleporterOutsideConnection:
+		var focused_entry = get_focused_connection_entry()
+
+		focused_entry.teleporter = teleporter
+		focused_entry.teleporter.teleport_location = focused_entry.connected_to
+		
 	
 	update_entity_list(node)
 	focus_default_connection_entry()
