@@ -13,6 +13,7 @@ extends StaticBody2D
 
 # Mesh of the 3D scene. Use this as a basis to check if the node is a 3D scene or not
 @export var mesh: Mesh
+var mesh_filename: String
 
 var teleporters: Array[TeleporterOutsideConnection]
 # Array of teleporter poositions in a 3D scene that do not lead out of the node

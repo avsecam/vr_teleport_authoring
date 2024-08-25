@@ -20,6 +20,7 @@ func _ready():
 	Events.teleport_requested.connect(_on_teleport_requested)
 
 func _process(_delta):
+	self.visible = false
 	# Invert camera to compensate for inverted 360 image
 	camera.scale = Vector3(-1, 1, 1)
 	

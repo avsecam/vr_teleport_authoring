@@ -157,7 +157,14 @@ func _on_save_requested():
 		
 		var saved_teleport_node: SavedTeleportNode = SavedTeleportNode.new()
 		saved_teleport_node.area_name = teleport_node.area_name
-		saved_teleport_node.sprite_texture_filename = teleport_node.sprite_texture_filename
+		
+		# prioritize 3D scenes
+		if teleport_node.mesh:
+			DirAccess.copy_absolute(teleport_node.mesh_filename, full_dir_name + (teleport_node.mesh_filename as String).get_file())
+			saved_teleport_node.obj_filename = teleport_node.mesh_filename
+		else:
+			saved_teleport_node.sprite_texture_filename = teleport_node.sprite_texture_filename
+		
 		saved_teleport_node.node_path = teleport_node.get_path()
 		saved_teleport_node.overview_position = teleport_node.position
 		saved_teleport_node.base_rotation = teleport_node.base_rotation
@@ -170,7 +177,7 @@ func _on_save_requested():
 		
 		# Save teleporters
 		for j in teleport_node.teleporters.size():
-			var teleporter: Teleporter = teleport_node.teleporters[j]
+			var teleporter: TeleporterOutsideConnection = teleport_node.teleporters[j]
 
 			if is_instance_valid(teleporter.teleport_location):
 				saved_teleport_node.teleporters.append({
@@ -178,6 +185,14 @@ func _on_save_requested():
 					"rotation": teleporter.rotation,
 					"to": teleporter.teleport_location.get_path() if teleporter.teleport_location else ""
 				})
+		
+		# Save teleport_spots
+		for j in teleport_node.teleport_spots.size():
+			var teleporter: Teleporter = teleport_node.teleport_spots[j]
+			saved_teleport_node.teleport_spots.append({
+				"position": teleporter.position,
+				"rotation": teleporter.rotation
+			})
 		
 		ResourceSaver.save(saved_teleport_node, full_dir_name + saved_teleport_node.area_name + ".tres")
 	
@@ -224,7 +239,13 @@ func _on_load_requested(file_path: String):
 		
 		var teleport_node: TeleportNode = preload ("res://src/TeleportNode.tscn").instantiate()
 		teleport_node.area_name = saved_teleport_node.area_name
-		teleport_node.sprite_texture_filename = saved_teleport_node.sprite_texture_filename
+		
+		# Prioritize 3D scenes
+		if saved_teleport_node.obj_filename:
+			teleport_node.mesh = load(saved_teleport_node.obj_filename)
+			teleport_node.mesh_filename = saved_teleport_node.obj_filename
+		else:
+			teleport_node.sprite_texture_filename = saved_teleport_node.sprite_texture_filename
 		teleport_node.position = saved_teleport_node.overview_position
 		teleport_node.base_rotation = saved_teleport_node.base_rotation
 		
@@ -258,9 +279,21 @@ func _on_load_requested(file_path: String):
 		for j in saved_teleport_node.teleporters.size():
 			var teleporter: Dictionary = saved_teleport_node.teleporters[j]
 			
-			var new_teleporter: Teleporter = preload ("res://src/Teleporter.tscn").instantiate()
+			var new_teleporter: TeleporterOutsideConnection = preload ("res://src/TeleporterOutsideConnection.tscn").instantiate()
 			new_teleporter.position = teleporter["position"]
 			new_teleporter.rotation = teleporter["rotation"]
 			new_teleporter.teleport_location = get_node(teleporter["to"])
-			
+			if (saved_teleport_node.area_name as String).contains("obj"):
+				print(teleporter)
 			teleport_node.teleporters.append(new_teleporter)
+		
+		# Load teleport_spots if 3D scene
+		if saved_teleport_node.obj_filename:
+			for j in saved_teleport_node.teleport_spots.size():
+				var teleporter: Dictionary = saved_teleport_node.teleport_spots[j]
+				
+				var new_teleporter: Teleporter = preload ("res://src/Teleporter.tscn").instantiate()
+				new_teleporter.position = teleporter["position"]
+				new_teleporter.rotation = teleporter["rotation"]
+				
+				teleport_node.teleport_spots.append(new_teleporter)

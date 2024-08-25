@@ -101,8 +101,6 @@ func _process(_delta):
 func update_entity_list(node: TeleportNode):
 	if State.active_authoring == State.ActiveAuthoring.Teleport:
 		var all_teleporters = node.teleport_spots + node.teleport_connections
-		#all_teleporters.append_array(node.teleport_spots.duplicate())
-		print_debug(all_teleporters)
 		# Make number of connection entries equal the number of connections
 		var difference = entity_list.get_child_count() - all_teleporters.size()
 		if difference < 0:
@@ -177,6 +175,7 @@ func _on_file_dialog_file_selected(path: String):
 	if filetype == "jpg":
 		teleport_node.sprite_texture_filename = path
 	elif filetype == "obj":
+		teleport_node.mesh_filename = path
 		(teleport_node.mesh) = load(path)
 		
 	teleport_node.area_name = path.get_file()

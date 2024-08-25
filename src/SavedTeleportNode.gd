@@ -6,6 +6,7 @@ extends Resource
 @export var node_path: NodePath
 @export var area_name: String
 @export var sprite_texture_filename: String
+@export var obj_filename: String
 @export var base_rotation: float
 
 @export var overview_position: Vector2
@@ -13,3 +14,4 @@ extends Resource
 # these arrays' elements should correspond to each other
 @export var teleport_connections_node_paths: Array[NodePath]
 @export var teleporters: Array # of {position: Vector3, rotation: Vector3, to: NodePath}
+@export var teleport_spots: Array # of {position: Vector3, rotation: Vector3}

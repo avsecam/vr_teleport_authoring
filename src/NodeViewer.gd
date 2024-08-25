@@ -143,17 +143,23 @@ func _on_teleport_node_enter_requested(node_to_enter: TeleportNode):
 	
 	if node_to_enter.sprite_texture_filename:
 		self.mesh.mesh.material.albedo_texture = node_to_enter.sprite.texture
+		
+		# Load teleporters from TeleportNode
+		for i in node_to_enter.teleporters.size():
+			teleporters.add_child(node_to_enter.teleporters[i])
 	else:
 		self.three_d_scene.mesh = Mesh.new()
 		self.three_d_scene.mesh = node_to_enter.mesh
 		self.three_d_scene.create_trimesh_collision()
-
+		
+		# Load teleporters and teleport_spots from TeleportNode
+		for i in node_to_enter.teleporters.size():
+			teleporters_three_d_scene.add_child(node_to_enter.teleporters[i])
+		for i in node_to_enter.teleport_spots.size():
+			teleporters_three_d_scene.add_child(node_to_enter.teleport_spots[i])
+	
 	self.camera.current = true
 	self.camera.rotation.y = node_to_enter.base_rotation
-	
-	# Load teleporters from TeleportNode
-	for i in node_to_enter.teleporters.size():
-		teleporters.add_child(node_to_enter.teleporters[i])
 	
 	self.visible = true
 	
