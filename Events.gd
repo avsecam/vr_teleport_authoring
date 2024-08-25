@@ -11,7 +11,8 @@ signal teleport_node_connection_add_requested(to: TeleportNode)
 
 signal teleport_node_enter_requested(node: TeleportNode)
 signal teleport_node_exit_requested(node: TeleportNode)
-signal teleporter_add_requested(node: TeleportNode, teleporter: Teleporter)
+signal teleporter_add_requested(node: TeleportNode, pos: Vector3, rot: Vector3)
+signal teleporter_add_finished(node: TeleportNode, teleporter: Teleporter, pos: Vector3, rot: Vector3)
 
 signal connection_entry_select_requested(entry: ConnectionEntry)
 signal connection_entry_delete_requested(entry: ConnectionEntry)

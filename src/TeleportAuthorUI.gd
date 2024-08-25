@@ -1,6 +1,8 @@
 extends Control
 
-const connection_entry: PackedScene = preload ("res://src/ConnectionEntry.tscn")
+const connection_entry: PackedScene = preload("res://src/ConnectionEntry.tscn")
+const teleporter_scene: PackedScene = preload("res://src/Teleporter.tscn")
+const teleporter_oc_scene: PackedScene = preload("res://src/TeleporterOutsideConnection.tscn")
 
 @onready var project_title: Label = $TopUI/CenterContainer/VBoxContainer/ProjectTitle
 @onready var demo_button: Button = $TopUI/CenterContainer/VBoxContainer/Demo
@@ -133,9 +135,9 @@ func update_entity_list(node: TeleportNode):
 					entry.teleporter = all_teleporters[i]
 				
 
+# Focus first entry that has no teleporter or the first-most entry
 func focus_default_connection_entry():
 	if entity_list.get_child_count() > 0:
-		# Focus first entry that has no teleporter
 		var entry_without_teleporter: ConnectionEntry
 		for connection in entity_list.get_children():
 			if not (connection as ConnectionEntry).teleporter:
@@ -246,13 +248,52 @@ func _on_teleport_node_exit_requested(_node):
 	
 	entity_list.visible = false
 
-func _on_teleporter_add_requested(node: TeleportNode, teleporter: Teleporter):
-	if teleporter is TeleporterOutsideConnection:
-		var focused_entry = get_focused_connection_entry()
+func _on_teleporter_add_requested(node: TeleportNode, pos: Vector3, rot: Vector3):
+	var focused_entry = get_focused_connection_entry()
+	if node.mesh:
+		# If 3D scene
+		if not focused_entry:
+			# Meaning this should be a Teleporter
+			var teleporter = teleporter_scene.instantiate()
 
-		focused_entry.teleporter = teleporter
-		focused_entry.teleporter.teleport_location = focused_entry.connected_to
-		
+			node.teleport_spots.append(teleporter)
+			Events.teleporter_add_finished.emit(node, teleporter, pos, rot)
+		elif focused_entry and (focused_entry as ConnectionEntry).connected_to and \
+			not (focused_entry as ConnectionEntry).teleporter:
+			# Meaning this should be a TeleporterOutsideConnection
+			var teleporter = teleporter_oc_scene.instantiate()
+
+			node.teleporters.append(teleporter)
+
+			focused_entry.teleporter = teleporter
+			focused_entry.teleporter.teleport_location = focused_entry.connected_to
+			
+			print(teleporter.global_position)
+			Events.teleporter_add_finished.emit(node, teleporter, pos, rot)
+		else:
+			# Meaning this should be a Teleporter
+			var teleporter = teleporter_scene.instantiate()
+
+			node.teleport_spots.append(teleporter)
+			Events.teleporter_add_finished.emit(node, teleporter, pos, rot)
+	else:
+		if not focused_entry:
+			return
+		# If 360 image scene
+		if (focused_entry as ConnectionEntry).connected_to and \
+			not (focused_entry as ConnectionEntry).teleporter:
+			# Meaning this should be a TeleporterOutsideConnection
+			var teleporter = teleporter_oc_scene.instantiate()
+			teleporter.global_position = pos
+			teleporter.global_rotation = rot
+
+			node.teleporters.append(teleporter)
+
+			focused_entry.teleporter = teleporter
+			focused_entry.teleporter.teleport_location = focused_entry.connected_to
+			
+			print(teleporter.global_position)
+			Events.teleporter_add_finished.emit(node, teleporter, pos, rot)
 	
 	update_entity_list(node)
 	focus_default_connection_entry()

@@ -35,6 +35,8 @@ func _ready():
 	Events.teleport_node_enter_requested.connect(_on_teleport_node_enter_requested)
 	Events.teleport_node_exit_requested.connect(_on_teleport_node_exit_requested)
 	
+	Events.teleporter_add_finished.connect(_on_teleporter_add_finished)
+	
 	Events.connection_entry_select_requested.connect(_on_connection_entry_select_requested)
 	Events.connection_entry_delete_requested.connect(_on_connection_entry_delete_requested)
 
@@ -62,7 +64,7 @@ func _process(_delta):
 		
 		if floor_checker.is_colliding():
 			if Input.is_action_just_pressed("place_teleporter"):
-				add_teleporter_three_d_scene()
+				add_teleporter()
 	else:
 		self.mesh.visible = true
 		self.three_d_scene.visible = false
@@ -124,25 +126,11 @@ func can_add_teleporter():
 	return teleporters.get_child_count() < node.teleport_connections.size()
 
 func add_teleporter():
-	var teleporter: TeleporterOutsideConnection = teleporter_oc_scene.instantiate()
-	
-	teleporters.add_child(teleporter)
-	teleporter.global_position = indicator.global_position
-	teleporter.global_rotation = indicator.global_rotation
-	
-	node.teleporters.append(teleporter)
-
-	Events.teleporter_add_requested.emit(node, teleporter)
-func add_teleporter_three_d_scene():
-	var teleporter: Teleporter = teleporter_scene.instantiate()
-	
-	teleporters_three_d_scene.add_child(teleporter)
-	teleporter.global_position = Vector3(floor_checker.get_collision_point())
-	teleporter.global_rotation = Vector3()
-	
-	node.teleport_spots.append(teleporter)
-	
-	Events.teleporter_add_requested.emit(node, teleporter)
+	if is_three_d_scene():
+		print(floor_checker.get_collision_point())
+		Events.teleporter_add_requested.emit(node, floor_checker.get_collision_point(), Vector3())
+	else:
+		Events.teleporter_add_requested.emit(node, indicator.global_position, indicator.global_rotation)
 
 func replace_base_rotation():
 	var view_rotation = camera.rotation.y
@@ -152,7 +140,7 @@ func replace_base_rotation():
 
 func _on_teleport_node_enter_requested(node_to_enter: TeleportNode):
 	self.node = node_to_enter
-
+	
 	if node_to_enter.sprite_texture_filename:
 		self.mesh.mesh.material.albedo_texture = node_to_enter.sprite.texture
 	else:
@@ -169,6 +157,8 @@ func _on_teleport_node_enter_requested(node_to_enter: TeleportNode):
 	
 	self.visible = true
 	
+	#camera.scale = Vector3(1, -1, 1)
+	
 	authoring.in_edit_node_mode = true
 
 func _on_teleport_node_exit_requested(node_to_exit: TeleportNode):
@@ -181,6 +171,14 @@ func _on_teleport_node_exit_requested(node_to_exit: TeleportNode):
 	
 	self.visible = false
 	authoring.in_edit_node_mode = false
+
+func _on_teleporter_add_finished(node: TeleportNode, teleporter: Teleporter, pos: Vector3, rot: Vector3):
+	if is_three_d_scene():
+		teleporters_three_d_scene.add_child(teleporter)
+	else:
+		teleporters.add_child(teleporter)
+	teleporter.global_position = pos
+	teleporter.global_rotation = rot
 
 func _on_connection_entry_select_requested(entry: ConnectionEntry):
 	# Look at selected entry's assigned teleporter

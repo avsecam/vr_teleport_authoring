@@ -22,7 +22,7 @@ func _ready():
 	label.text = connected_to.area_name if connected_to else ""
 
 func _process(_delta):
-	$Delete.visible = (teleporter != null) or (not teleporter is TeleporterOutsideConnection)
+	$Delete.visible = (teleporter != null) or (teleporter and not (teleporter is TeleporterOutsideConnection))
 	modulate = focused_color if focused else unfocused_color
 
 func _on_area_name_button_pressed():
