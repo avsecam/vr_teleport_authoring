@@ -37,7 +37,6 @@ mesh = SubResource("SphereMesh_7kg3k")
 
 [node name="Camera3D" type="Camera3D" parent="DemoViewer/Bubble"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, -1, 0, 0, 0)
-current = true
 
 [node name="OmniLight3D" type="OmniLight3D" parent="DemoViewer/Bubble"]
 omni_range = 7.0
@@ -51,10 +50,11 @@ visible = false
 script = ExtResource("1_g7wbb")
 
 [node name="Bubble" type="MeshInstance3D" parent="NodeViewer"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.365, 0)
 mesh = SubResource("SphereMesh_7kg3k")
 
 [node name="Camera3D" type="Camera3D" parent="NodeViewer/Bubble"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, -1, 0, 0, 0)
+transform = Transform3D(1, 8.74228e-08, 0, -8.74228e-08, 1, 0, 0, 0, -1, 0, 0, 0)
 current = true
 
 [node name="TeleporterIndicatorAnchor" type="Node3D" parent="NodeViewer/Bubble/Camera3D"]
@@ -65,11 +65,21 @@ transform = Transform3D(1, 0, 0, 0, 0.986286, 0.165048, 0, -0.165048, 0.986286, 
 [node name="MeshInstance3D" parent="NodeViewer/Bubble/Camera3D/TeleporterIndicatorAnchor/TeleporterIndicator/CollisionShape3D" index="0"]
 mesh = SubResource("CylinderMesh_4apla")
 
+[node name="RayCast3D" type="RayCast3D" parent="NodeViewer/Bubble/Camera3D"]
+target_position = Vector3(0, -10, 0)
+
 [node name="OmniLight3D" type="OmniLight3D" parent="NodeViewer/Bubble"]
 omni_range = 7.0
 omni_attenuation = 1e-05
 
 [node name="Teleporters" type="Node3D" parent="NodeViewer/Bubble"]
+
+[node name="3DScene" type="MeshInstance3D" parent="NodeViewer"]
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="NodeViewer/3DScene"]
+transform = Transform3D(0.784776, 0.384126, -0.486388, 0, 0.784776, 0.619779, 0.619779, -0.486388, 0.615874, 0, 0, 0)
+
+[node name="Teleporters" type="Node3D" parent="NodeViewer/3DScene"]
 
 [node name="TeleportAuthor" type="Node2D" parent="."]
 unique_name_in_owner = true
@@ -121,6 +131,7 @@ text = "Untitled Project"
 horizontal_alignment = 1
 
 [node name="Demo" type="Button" parent="Camera2D/CanvasLayer/TeleportAuthorUI/TopUI/CenterContainer/VBoxContainer"]
+visible = false
 layout_mode = 2
 text = "DEMO"
 
@@ -157,7 +168,7 @@ size = Vector2i(975, 460)
 ok_button_text = "Open"
 file_mode = 0
 access = 2
-filters = PackedStringArray("*.png, *.jpg, *.jpeg")
+filters = PackedStringArray("*.png, *.jpg, *.jpeg, *.obj")
 
 [node name="Container" type="MarginContainer" parent="Camera2D/CanvasLayer/TeleportAuthorUI"]
 layout_mode = 1
@@ -178,11 +189,6 @@ layout_mode = 2
 theme_override_constants/separation = 15
 alignment = 1
 
-[node name="Switch" type="Button" parent="Camera2D/CanvasLayer/TeleportAuthorUI/Container/HBoxContainer"]
-custom_minimum_size = Vector2(100, 0)
-layout_mode = 2
-text = "EVENTS"
-
 [node name="VBoxContainer" type="VBoxContainer" parent="Camera2D/CanvasLayer/TeleportAuthorUI/Container/HBoxContainer"]
 layout_mode = 2
 alignment = 1
@@ -196,16 +202,6 @@ text = "ADD NODE"
 custom_minimum_size = Vector2(100, 0)
 layout_mode = 2
 text = "DELETE NODE"
-
-[node name="AddObject" type="Button" parent="Camera2D/CanvasLayer/TeleportAuthorUI/Container/HBoxContainer/VBoxContainer" groups=["EventAuthorButtons"]]
-custom_minimum_size = Vector2(100, 32.39)
-layout_mode = 2
-text = "ADD OBJECT"
-
-[node name="DeleteObject" type="Button" parent="Camera2D/CanvasLayer/TeleportAuthorUI/Container/HBoxContainer/VBoxContainer" groups=["EventAuthorButtons"]]
-custom_minimum_size = Vector2(100, 32.39)
-layout_mode = 2
-text = "DELETE OBJECT"
 
 [node name="EditConnections" type="Button" parent="Camera2D/CanvasLayer/TeleportAuthorUI/Container/HBoxContainer" groups=["TeleportAuthorButtons"]]
 custom_minimum_size = Vector2(100, 0)
