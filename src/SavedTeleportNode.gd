@@ -1,3 +1,4 @@
+# Container of one teleport node that is saved to a file
 class_name SavedTeleportNode
 extends Resource
 

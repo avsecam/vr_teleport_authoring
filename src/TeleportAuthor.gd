@@ -34,9 +34,11 @@ func child_selected():
 
 func _on_teleport_node_selected(node: TeleportNode):
 	if in_edit_connections_mode:
+		# Add a connection if editing connections
 		if not self.child_selected().get_path() == node.get_path():
 			_on_teleport_node_connection_add_requested(node)
 	else:
+		# Select or deselect node
 		if not node.selected:
 			for child in nodes.get_children():
 				(child as TeleportNode).selected = false
@@ -102,6 +104,7 @@ func _on_demo_exit_requested():
 	self.visible = true
 
 # TODO: Dont allow same named nodes
+# Export the current project to JSONs to be used in a separate project
 func _on_export_requested():
 	var folder_name: String = "exported_" + str(floor(Time.get_unix_time_from_system()))
 	var dir: DirAccess = DirAccess.open("user://")
@@ -116,6 +119,8 @@ func _on_export_requested():
 		
 		var image_filename: String
 		var obj_filename: String
+
+		# Export 3D Scene or 360 Image Scene
 		if node.mesh:
 			obj_filename = full_dir_name + node.mesh_filename
 			DirAccess.copy_absolute(node.mesh_filename, full_dir_name + node.area_name.to_pascal_case().get_file())
@@ -163,6 +168,7 @@ func _on_export_requested():
 	# Open folder containing scenes
 	OS.shell_show_in_file_manager(ProjectSettings.globalize_path(full_dir_name))
 
+# Save all nodes and flags for future use within this project
 func _on_save_requested():
 	var folder_name: String = "saved_" + str(floor(Time.get_unix_time_from_system()))
 	var dir: DirAccess = DirAccess.open("user://")
@@ -215,12 +221,14 @@ func _on_save_requested():
 		
 		ResourceSaver.save(saved_teleport_node, full_dir_name + saved_teleport_node.area_name + ".tres")
 	
+	# Save event flags
 	var event_flags_save = FileAccess.open(full_dir_name + "flags.json", FileAccess.WRITE)
 	event_flags_save.store_string(JSON.stringify(EventFlags.data))
 	
 	OS.shell_show_in_file_manager(ProjectSettings.globalize_path(full_dir_name))
 	Events.save_finished.emit()
 
+# Load file saved from _on_save_requested()
 func _on_load_requested(file_path: String):
 	# Clear TeleportNodes
 	for i in %TeleportNodes.get_child_count():

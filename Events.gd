@@ -1,5 +1,7 @@
 extends Node
 
+# This script contains all the signals that are used to communicate between the different parts of the application.
+
 # Teleport Author
 signal teleport_node_selected(node: TeleportNode)
 signal teleport_node_drag_started(node: TeleportNode)

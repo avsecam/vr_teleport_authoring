@@ -138,6 +138,7 @@ func replace_base_rotation():
 	
 	print(view_rotation, " set as base rotation.")
 
+# Set stuff before entering node
 func _on_teleport_node_enter_requested(node_to_enter: TeleportNode):
 	self.node = node_to_enter
 	

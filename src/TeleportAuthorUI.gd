@@ -7,6 +7,7 @@ const teleporter_oc_scene: PackedScene = preload("res://src/TeleporterOutsideCon
 @onready var project_title: Label = $TopUI/CenterContainer/VBoxContainer/ProjectTitle
 @onready var demo_button: Button = $TopUI/CenterContainer/VBoxContainer/Demo
 
+# List of teleport connections on the left of the screen
 @onready var entity_list: VBoxContainer = $LeftUI/VBoxContainer/EntityList
 
 @onready var file_dialog: FileDialog = $FileDialog
@@ -161,6 +162,7 @@ func get_focused_connection_entry():
 	
 	return null
 
+# Open file dialog to add teleport node
 func _on_add_node_button_pressed():
 	file_dialog.file_mode = FileDialog.FILE_MODE_OPEN_FILE
 	#file_dialog.current_dir = ProjectSettings.globalize_path("C:/Users/VAMR/Downloads/drive-download-20240411T035525Z-001")
@@ -214,6 +216,7 @@ func _on_demo_button_pressed():
 func _on_switch_button_pressed():
 	Events.switch_requested.emit()
 
+# Enter or exit node
 func _on_enter_node_button_pressed():
 	var selected_child: TeleportNode = teleport_author.child_selected()
 	
